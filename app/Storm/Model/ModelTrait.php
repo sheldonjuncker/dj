@@ -2,7 +2,6 @@
 
 
 namespace App\Storm\Model;
-use Nette\Database\ResultSet;
 use Nette\Database\Row;
 
 /**
@@ -18,7 +17,7 @@ trait ModelTrait
 	/**
 	 * Sets the properties of the model from query results.
 	 *
-	 * @param ResultSet $queryResults
+	 * @param Row $queryResults
 	 * @throws \Exception
 	 */
 	public function setProperties(Row $queryResults)

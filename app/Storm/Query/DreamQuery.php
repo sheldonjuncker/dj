@@ -22,7 +22,12 @@ class DreamQuery extends SqlQuery
 		return $this;
 	}
 
-	public function buildQuery(): string
+	protected function getModel(): Model
+	{
+		return new DreamModel();
+	}
+
+	protected function buildQuery(): string
 	{
 		$sql = "
 			SELECT
@@ -43,37 +48,5 @@ class DreamQuery extends SqlQuery
 
 		$sql = str_replace("{conditions}", $conditionsSql, $sql);
 		return $sql;
-	}
-
-	/**
-	 * Finds a single dream.
-	 *
-	 * @return DreamModel
-	 */
-	public function findOne(): ?Model
-	{
-		//So efficient!
-		$result = $this->query($this->buildQuery())[0] ?? NULL;
-		$model = new DreamModel();
-		$model->setProperties($result);
-		return $model;
-	}
-
-	/**
-	 * Finds all of the dreams.
-	 *
-	 * @return DreamModel[]
-	 */
-	public function findAll(): array
-	{
-		$results = $this->query($this->buildQuery());
-		$models = [];
-		foreach($results as $result)
-		{
-			$model = new DreamModel();
-			$model->setProperties($result);
-			$models[] = $model;
-		}
-		return $models;
 	}
 }

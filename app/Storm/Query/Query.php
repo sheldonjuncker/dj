@@ -20,6 +20,13 @@ use App\Storm\Model\Model;
 abstract class Query
 {
 	/**
+	 * Gets an interator for the models to improve performance.
+	 *
+	 * @return Model[]
+	 */
+	abstract public function find(): \Iterator;
+
+	/**
 	 * Finds a single Model.
 	 *
 	 * @return Model
