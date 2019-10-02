@@ -50,7 +50,7 @@ abstract class SqlQuery extends Query
 	 */
 	public function findOne(): ?Model
 	{
-		$result = $this->query($this->buildQuery())[0] ?? NULL;
+		$result = $this->query($this->buildQuery())->fetch();
 		$model = $this->getModel();
 		$model->setProperties($result);
 		return $model;

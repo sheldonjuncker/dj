@@ -49,4 +49,31 @@ class DreamQuery extends SqlQuery
 		$sql = str_replace("{conditions}", $conditionsSql, $sql);
 		return $sql;
 	}
+
+
+	# Only added for type hinting
+
+	/**
+	 * @return DreamModel[]
+	 */
+	public function find(): \Iterator
+	{
+		yield from parent::find();
+	}
+
+	/**
+	 * @return DreamModel|null
+	 */
+	public function findOne(): ?Model
+	{
+		return parent::findOne();
+	}
+
+	/**
+	 * @return DreamModel[]
+	 */
+	public function findAll(): array
+	{
+		return parent::findAll();
+	}
 }

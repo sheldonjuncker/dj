@@ -20,7 +20,7 @@ use App\Storm\Model\Model;
 abstract class Query
 {
 	/**
-	 * Gets an interator for the models to improve performance.
+	 * Gets an iterator for the models to improve performance.
 	 *
 	 * @return Model[]
 	 */

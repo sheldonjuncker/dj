@@ -21,6 +21,7 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
 	public function renderShow()
 	{
 		$dreamQuery = new DreamQuery($this->database);
+		$dreamQuery->findOne();
 		$this->template->add('dreams',$dreamQuery->find());
 	}
 }
