@@ -16,6 +16,11 @@ class DreamModel implements Model
 	protected $created_at;
 	protected $updated_at;
 
+	public function getId(): string
+	{
+		return $this->id;
+	}
+
 	public function getTitle(): string
 	{
 		return $this->title;

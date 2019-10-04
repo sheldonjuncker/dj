@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Query\DreamQuery;
 use Nette;
 
@@ -21,7 +22,6 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
 	public function renderShow()
 	{
 		$dreamQuery = new DreamQuery($this->database);
-		$dreamQuery->findOne();
 		$this->template->add('dreams',$dreamQuery->find());
 	}
 }
