@@ -8,7 +8,6 @@ use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
 use App\Storm\Model\DreamModel;
 use Nette\Database\Table\Selection;
-use Nette\Database\Table\SqlBuilder;
 
 class DreamQuery extends SqlQuery
 {
@@ -33,7 +32,7 @@ class DreamQuery extends SqlQuery
 
 	protected function buildQuery(): Selection
 	{
-		$dreams = $this->connection->table('dj.dreams');
+		$dreams = $this->connection->table('dreams');
 
 		if($this->scopeId)
 		{
