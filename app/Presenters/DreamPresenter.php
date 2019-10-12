@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Storm\Query\DreamQuery;
 use Nette;
 
 final class DreamPresenter extends Nette\Application\UI\Presenter
@@ -17,7 +18,8 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 
 	public function renderDefault()
 	{
-
+		$dreams = new DreamQuery($this->database);
+		$this->template->add('dreams', $dreams->find());
 	}
 
 	public function renderShow(string $id)

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dream Journal | Celial</title>
+		<link rel="stylesheet" type="text/css" href="/css/main.css">
+	</head>
+	<body>
+		<!-- Header -->
+		<h2>Welcome to the Dream Journal.</h2>
+
+		<hr>
+
+		<!-- Menu -->
+		<ul>
+			<li>
+				<a href="/dream/new">New Dream</a>
+			</li>
+		</ul>
+
+		<hr>
+
+		<h3>My Dreams</h3>
+
+		<hr>
+
+		{foreach $dreams as $dream}
+			<div class="dream">
+				<div class="dream-header">
+					<div class="dream-title header-text">
+						{$dream->getTitle()}
+					</div>
+					<div class="dream-date">{$dream->getFormattedDate()}</div>
+				</div>
+				<div class="dream-body">
+					<p>{$dream->getDescription()}</p>
+				</div>
+				<div class="dream-actions">
+					<ul>
+						<li><a href="/dream/show/{$dream->getId()}">Show</a></li>
+						<li><a href="/dream/edit/{$dream->getId()}">Edit</a></li>
+					</ul>
+				</div>
+			</div>
+			<hr>
+		{/foreach}
+	</body>
+</html>

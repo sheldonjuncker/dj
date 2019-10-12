@@ -1,0 +1,56 @@
+body{
+    width:50%;
+    margin-left:25%;
+}
+
+h1, h2, h3, h4, .header-text{
+    font-family:Verdana;
+}
+
+a, p, span, .body-text{
+    font-family:Arial;
+}
+
+.dream{
+    margin-bottom:30px;
+}
+
+.dream-title{
+    font-weight:bold;
+    font-size:18px;
+    float:left;
+    width:75%;
+}
+
+.dream-date{
+    font-style:italic;
+    float:left;
+    width:25%;
+}
+
+.dream-body{
+    clear:left;
+    border-top:1px dotted #000;
+}
+
+.dream-actions{
+    width:100%;
+    height:20px;
+    border-top:1px dotted #000;
+}
+
+.dream-actions ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+.dream-actions ul li{
+    list-style:none;
+    margin-right:10px;
+    float:left;
+}
+
+hr{
+    clear:left;
+}

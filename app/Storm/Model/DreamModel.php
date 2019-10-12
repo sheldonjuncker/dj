@@ -3,6 +3,7 @@
 
 namespace App\Storm\Model;
 
+use Nette;
 
 class DreamModel implements Model
 {
@@ -12,8 +13,14 @@ class DreamModel implements Model
 	protected $user_id;
 	protected $title;
 	protected $description;
+
+	/** @var  Nette\Utils\DateTime $dreamt_at */
 	protected $dreamt_at;
+
+	/** @var  Nette\Utils\DateTime $created_at */
 	protected $created_at;
+
+	/** @var  Nette\Utils\DateTime $updated_at */
 	protected $updated_at;
 
 	public function getId(): string
@@ -24,5 +31,15 @@ class DreamModel implements Model
 	public function getTitle(): string
 	{
 		return $this->title;
+	}
+
+	public function getDescription(): string
+	{
+		return $this->description;
+	}
+
+	public function getFormattedDate(): string
+	{
+		return date('d.m.Y', $this->dreamt_at->getTimestamp());
 	}
 }
