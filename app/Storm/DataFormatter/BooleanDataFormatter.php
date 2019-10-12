@@ -6,13 +6,13 @@ namespace App\Storm\DataFormatter;
 
 class BooleanDataFormatter extends DataFormatter
 {
-	public function formatFromDataSource(): bool
+	public function formatFromDataSource($data): bool
 	{
-		return boolval(parent::formatFromDataSource());
+		return boolval(parent::formatFromDataSource($data));
 	}
 
-	public function formatToDataSource(): int
+	public function formatToDataSource($data): int
 	{
-		return intval(parent::formatToDataSource());
+		return intval(parent::formatToDataSource($data));
 	}
 }

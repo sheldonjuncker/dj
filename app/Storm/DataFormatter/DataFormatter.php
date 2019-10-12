@@ -13,21 +13,14 @@ namespace App\Storm\DataFormatter;
  */
 class DataFormatter implements IDataFormatter
 {
-	protected $data;
-
-	public function __construct($data)
-	{
-		$this->data = $data;
-	}
-
 	/**
 	 * Formats data coming from the Data Source to set on the Model.
 	 *
 	 * @return mixed
 	 */
-	public function formatFromDataSource()
+	public function formatFromDataSource($data)
 	{
-		return $this->data;
+		return $data;
 	}
 
 	/**
@@ -35,8 +28,8 @@ class DataFormatter implements IDataFormatter
 	 *
 	 * @return mixed
 	 */
-	public function formatToDataSource()
+	public function formatToDataSource($data)
 	{
-		return $this->data;
+		return $data;
 	}
 }

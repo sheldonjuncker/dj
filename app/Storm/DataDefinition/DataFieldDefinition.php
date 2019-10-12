@@ -1,7 +1,8 @@
 <?php
 
-
 namespace App\Storm\DataDefinition;
+
+use App\Storm\DataFormatter\DataFormatter;
 
 /**
  * Class DataField
@@ -21,9 +22,13 @@ class DataFieldDefinition
 	/** @var bool $isSavable Specifies whether or not the Data Source will save this field from the Model */
 	protected $isSavable = true;
 
-	public function __construct(string $name, bool $isReadable = true, bool $isSavable = true)
+	/** @var DataFormatter $formatter */
+	protected $formatter;
+
+	public function __construct(string $name, DataFormatter $formatter = NULL, bool $isReadable = true, bool $isSavable = true)
 	{
 		$this->name = $name;
+		$this->formatter = $formatter ?? new DataFormatter();
 		$this->isReadable = $isReadable;
 		$this->isSavable = $isSavable;
 	}
@@ -34,6 +39,14 @@ class DataFieldDefinition
 	public function getName(): string
 	{
 		return $this->name;
+	}
+
+	/**
+	 * @return DataFormatter
+	 */
+	public function getFormatter(): DataFormatter
+	{
+		return $this->formatter;
 	}
 
 	/**

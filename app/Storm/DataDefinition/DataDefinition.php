@@ -19,7 +19,7 @@ class DataDefinition
 	 *
 	 * @param DataFieldDefinition[] $dataFields
 	 */
-	protected function __construct(array $dataFields = [])
+	public function __construct(array $dataFields = [])
 	{
 		foreach($dataFields as $dataField)
 		{

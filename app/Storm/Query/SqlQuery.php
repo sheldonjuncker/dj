@@ -6,6 +6,7 @@ namespace App\Storm\Query;
 use Nette\Database\Context;
 use Nette\Database\ResultSet;
 use App\Storm\Model\Model;
+use Nette\Database\Row;
 
 /**
  * Class SqlQuery
@@ -38,7 +39,7 @@ abstract class SqlQuery extends Query
 		foreach($results as $result)
 		{
 			$model = $this->getModel();
-			$model->setProperties($result);
+			$this->setProperties($model, $result);
 			yield $model;
 		}
 	}
@@ -52,7 +53,7 @@ abstract class SqlQuery extends Query
 	{
 		$result = $this->query($this->buildQuery())->fetch();
 		$model = $this->getModel();
-		$model->setProperties($result);
+		$this->setProperties($model, $result);
 		return $model;
 	}
 
@@ -68,10 +69,26 @@ abstract class SqlQuery extends Query
 		foreach($results as $result)
 		{
 			$model = $this->getModel();
-			$model->setProperties($result);
+			$this->setProperties($model, $result);
 			$models[] = $model;
 		}
 		return $models;
+	}
+
+	protected function setProperties(Model $model, Row $result)
+	{
+		$dataDefinition = $model->getDataDefinition();
+		foreach($result as $key => $value)
+		{
+			$field = $dataDefinition->getField($key);
+			if($field && $field->isReadable())
+			{
+				$reflectionProperty = new \ReflectionProperty($model, $key);
+				$reflectionProperty->setAccessible(true);
+				$formattedValue = $field->getFormatter()->formatFromDataSource($value);
+				$reflectionProperty->setValue($model, $formattedValue);
+			}
+		}
 	}
 
 	/**

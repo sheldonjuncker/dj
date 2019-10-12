@@ -13,22 +13,22 @@ namespace App\Storm\DataFormatter;
  */
 class UuidDataFormatter extends DataFormatter
 {
-	public function isUuid(): bool
+	public function isUuid($data): bool
 	{
-		return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $this->data);
+		return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $data);
 	}
 
-	public function formatFromDataSource(): string
+	public function formatFromDataSource($data): string
 	{
 		//If the data is coming to us as UUID, we are good
-		if($this->isUuid())
+		if($this->isUuid($data))
 		{
-			return $this->data;
+			return $data;
 		}
 		else
 		{
 			//Attempt to convert from a binary string to hex
-			$hex = bin2hex($this->data);
+			$hex = bin2hex($data);
 			$hex = str_pad($hex, '32', '0', STR_PAD_LEFT);
 			return
 				substr($hex, 0, 8) .
@@ -44,16 +44,16 @@ class UuidDataFormatter extends DataFormatter
 		}
 	}
 
-	public function formatToDataSource(): string
+	public function formatToDataSource($data): string
 	{
-		if($this->isUuid())
+		if($this->isUuid($data))
 		{
-			$hex = str_replace('-', '', $this->data);
+			$hex = str_replace('-', '', $data);
 			return hex2bin($hex);
 		}
 		else
 		{
-			return $this->data;
+			return $data;
 		}
 	}
 }

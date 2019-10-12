@@ -3,9 +3,9 @@
 
 namespace App\Storm\Model;
 
-use Nette\Database\Row;
+use App\Storm\DataDefinition\DataDefinition;
 
 interface Model
 {
-	public function setProperties(Row $queryResults);
+	public function getDataDefinition(): DataDefinition;
 }

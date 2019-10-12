@@ -6,13 +6,13 @@ namespace App\Storm\DataFormatter;
 
 class IntegerDataFormatter extends DataFormatter
 {
-	public function formatFromDataSource(): int
+	public function formatFromDataSource($data): int
 	{
-		return intval(parent::formatFromDataSource());
+		return intval(parent::formatFromDataSource($data));
 	}
 
-	public function formatToDataSource(): int
+	public function formatToDataSource($data): int
 	{
-		return intval(parent::formatToDataSource());
+		return intval(parent::formatToDataSource($data));
 	}
 }

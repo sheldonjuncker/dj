@@ -3,11 +3,26 @@
 
 namespace App\Storm\Model;
 
+use App\Storm\DataDefinition\DataDefinition;
+use App\Storm\DataDefinition\DataFieldDefinition;
+use App\Storm\DataFormatter\UuidDataFormatter;
 use Nette;
 
 class DreamModel implements Model
 {
-	use ModelTrait;
+	public function getDataDefinition(): DataDefinition
+	{
+		$dataFields = [
+			new DataFieldDefinition('id', new UuidDataFormatter()),
+			new DataFieldDefinition('user_id'),
+			new DataFieldDefinition('title'),
+			new DataFieldDefinition('description'),
+			new DataFieldDefinition('dreamt_at'),
+			new DataFieldDefinition('created_at'),
+			new DataFieldDefinition('updated_at')
+		];
+		return new DataDefinition($dataFields);
+	}
 
 	protected $id;
 	protected $user_id;
