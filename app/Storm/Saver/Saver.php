@@ -2,6 +2,7 @@
 
 namespace App\Storm\Saver;
 
+use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\Model\Model;
 
 /**
@@ -13,8 +14,18 @@ use App\Storm\Model\Model;
  */
 abstract class Saver
 {
-	public function save(Model $model)
-	{
-		
-	}
+	/**
+	 * Gets the data definition for what data the model accepts.
+	 *
+	 * @return DataDefinition
+	 */
+	abstract public function getDataDefinition(): DataDefinition;
+
+	/**
+	 * Saves the model throwing an exception on failure.
+	 *
+	 * @param Model $model
+	 * @throws SaveFailedException
+	 */
+	abstract public function save(Model $model);
 }
