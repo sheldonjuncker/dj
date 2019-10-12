@@ -43,6 +43,30 @@ class DreamModel implements Model
 		return $this->id;
 	}
 
+	/**
+	 * @param mixed $id
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getUserId()
+	{
+		return $this->user_id;
+	}
+
+	/**
+	 * @param mixed $user_id
+	 */
+	public function setUserId($user_id)
+	{
+		$this->user_id = $user_id;
+	}
+
 	public function getTitle(): string
 	{
 		return $this->title;

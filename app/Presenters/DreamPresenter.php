@@ -38,6 +38,11 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 		$this->template->add('dream', $dream);
 	}
 
+	public function renderNew()
+	{
+
+	}
+
 	public function renderSave(string $id = '')
 	{
 		if($id)

@@ -95,7 +95,7 @@ abstract class SqlSaver extends Saver
 		foreach($primaryKeyFields as $primaryKeyField)
 		{
 			$field = $fields->getField($primaryKeyField);
-			if($field && $field->getValue($primaryKeyField))
+			if($field && $field->getValue(false))
 			{
 				return false;
 			}
