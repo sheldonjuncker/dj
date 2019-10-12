@@ -4,6 +4,7 @@ namespace App\Storm\Saver;
 
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\Model\Model;
+use Nette\Database\Context;
 
 /**
  * Class Saver
@@ -14,13 +15,6 @@ use App\Storm\Model\Model;
  */
 abstract class Saver
 {
-	/**
-	 * Gets the data definition for what data the model accepts.
-	 *
-	 * @return DataDefinition
-	 */
-	abstract public function getDataDefinition(): DataDefinition;
-
 	/**
 	 * Saves the model throwing an exception on failure.
 	 *

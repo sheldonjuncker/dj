@@ -2,7 +2,9 @@
 
 namespace App\Presenters;
 
+use App\Storm\Model\DreamModel;
 use App\Storm\Query\DreamQuery;
+use App\Storm\Saver\DreamSaver;
 use Nette;
 
 final class DreamPresenter extends Nette\Application\UI\Presenter
@@ -27,5 +29,37 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 		$dreamQuery = new DreamQuery($this->database);
 		$dream = $dreamQuery->id($id)->findOne();
 		$this->template->add('dream', $dream);
+	}
+
+	public function renderEdit(string $id)
+	{
+		$dreamQuery = new DreamQuery($this->database);
+		$dream = $dreamQuery->id($id)->findOne();
+		$this->template->add('dream', $dream);
+	}
+
+	public function renderSave(string $id = '')
+	{
+		if($id)
+		{
+			$dreamQuery = new DreamQuery($this->database);
+			$dream = $dreamQuery->id($id)->findOne();
+		}
+		else
+		{
+			$dream = new DreamModel();
+		}
+
+		$dreamPost = $this->getHttpRequest()->getPost('Dream') ?: [];
+		$dream->setTitle($dreamPost['title']);
+		$dreamtAt = $dreamPost['dreamt_at'] ?? 'now';
+		$dreamtAt = new Nette\Utils\DateTime($dreamtAt);
+		$dream->setDreamtAt($dreamtAt);
+		$dream->setDescription($dreamPost['description']);
+
+		$dreamSaver = new DreamSaver($this->database);
+		$dreamSaver->save($dream);
+
+		$this->sendResponse(new Nette\Application\Responses\TextResponse("Hello, world!"));
 	}
 }

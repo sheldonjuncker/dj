@@ -2,6 +2,8 @@
 
 namespace App\Storm\DataDefinition;
 
+use App\Storm\Model\Model;
+
 /**
  * Class DataDefinition
  *
@@ -11,6 +13,9 @@ namespace App\Storm\DataDefinition;
  */
 class DataDefinition
 {
+	/** @var Model $model Model used for reflection */
+	protected $model;
+
 	/** @var DataFieldDefinition[]  */
 	protected $fields = [];
 
@@ -19,8 +24,9 @@ class DataDefinition
 	 *
 	 * @param DataFieldDefinition[] $dataFields
 	 */
-	public function __construct(array $dataFields = [])
+	public function __construct(Model $model, array $dataFields = [])
 	{
+		$this->model = $model;
 		foreach($dataFields as $dataField)
 		{
 			$this->addDataField($dataField);
@@ -32,7 +38,18 @@ class DataDefinition
 	 */
 	public function addDataField(DataFieldDefinition $dataField)
 	{
+		$dataField->setModel($this->model);
 		$this->fields[$dataField->getName()] = $dataField;
+	}
+
+	/**
+	 * Gets all of the fields.
+	 *
+	 * @return DataFieldDefinition[]
+	 */
+	public function getFields(): array
+	{
+		return $this->fields;
 	}
 
 	/**

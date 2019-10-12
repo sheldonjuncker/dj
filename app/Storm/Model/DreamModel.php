@@ -21,7 +21,7 @@ class DreamModel implements Model
 			new DataFieldDefinition('created_at'),
 			new DataFieldDefinition('updated_at')
 		];
-		return new DataDefinition($dataFields);
+		return new DataDefinition($this, $dataFields);
 	}
 
 	protected $id;
@@ -48,9 +48,33 @@ class DreamModel implements Model
 		return $this->title;
 	}
 
+	/**
+	 * @param mixed $title
+	 */
+	public function setTitle($title)
+	{
+		$this->title = $title;
+	}
+
 	public function getDescription(): string
 	{
 		return $this->description;
+	}
+
+	/**
+	 * @param mixed $description
+	 */
+	public function setDescription($description)
+	{
+		$this->description = $description;
+	}
+
+	/**
+	 * @param Nette\Utils\DateTime $dreamt_at
+	 */
+	public function setDreamtAt(Nette\Utils\DateTime $dreamt_at)
+	{
+		$this->dreamt_at = $dreamt_at;
 	}
 
 	public function getFormattedDate(): string

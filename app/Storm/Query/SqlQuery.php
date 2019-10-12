@@ -6,10 +6,8 @@ namespace App\Storm\Query;
 use Nette\Database\Context;
 use Nette\Database\ResultSet;
 use App\Storm\Model\Model;
-use Nette\Database\Row;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
-use Nette\Database\Table\SqlBuilder;
 
 /**
  * Class SqlQuery
@@ -82,12 +80,9 @@ abstract class SqlQuery extends Query
 		foreach($result->toArray() as $key => $value)
 		{
 			$field = $dataDefinition->getField($key);
-			if($field && $field->isReadable())
+			if($field)
 			{
-				$reflectionProperty = new \ReflectionProperty($model, $key);
-				$reflectionProperty->setAccessible(true);
-				$formattedValue = $field->getFormatter()->formatFromDataSource($value);
-				$reflectionProperty->setValue($model, $formattedValue);
+				$field->setValue($value);
 			}
 		}
 	}
