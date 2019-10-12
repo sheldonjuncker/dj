@@ -24,6 +24,8 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 
 	public function renderShow(string $id)
 	{
-
+		$dreamQuery = new DreamQuery($this->database);
+		$dream = $dreamQuery->id($id)->findOne();
+		$this->template->add('dream', $dream);
 	}
 }

@@ -1,15 +1,14 @@
 parameters:
 
-
 application:
 	errorPresenter: Error
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
-
 session:
 	expiration: 14 days
 
-
 services:
-	router: App\Router\RouterFactory::createRouter
+    router: App\Router\RouterFactory::createRouter
+    cacheStorage:
+        factory: Nette\Caching\Storages\DevNullStorage

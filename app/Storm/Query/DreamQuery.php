@@ -4,8 +4,11 @@
 namespace App\Storm\Query;
 
 
+use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
 use App\Storm\Model\DreamModel;
+use Nette\Database\Table\Selection;
+use Nette\Database\Table\SqlBuilder;
 
 class DreamQuery extends SqlQuery
 {
@@ -18,7 +21,8 @@ class DreamQuery extends SqlQuery
 	 */
 	public function id($id): self
 	{
-		$this->scopeId = $id;
+		$uuidFormatter = new UuidDataFormatter();
+		$this->scopeId = $uuidFormatter->formatToDataSource($id);
 		return $this;
 	}
 
@@ -27,27 +31,16 @@ class DreamQuery extends SqlQuery
 		return new DreamModel();
 	}
 
-	protected function buildQuery(): string
+	protected function buildQuery(): Selection
 	{
-		$sql = "
-			SELECT
-				*
-			FROM
-				dj.dreams dream
-			WHERE
-				{conditions}
-			;
-		";
+		$dreams = $this->connection->table('dj.dreams');
 
-		$conditions = ["1"];
 		if($this->scopeId)
 		{
-			$conditions[] = "dream.id = " . $this->scopeId;
+			$dreams->where('id', $this->scopeId);
 		}
-		$conditionsSql = implode(" AND ", $conditions);
 
-		$sql = str_replace("{conditions}", $conditionsSql, $sql);
-		return $sql;
+		return $dreams;
 	}
 
 

@@ -7,6 +7,9 @@ use Nette\Database\Context;
 use Nette\Database\ResultSet;
 use App\Storm\Model\Model;
 use Nette\Database\Row;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
+use Nette\Database\Table\SqlBuilder;
 
 /**
  * Class SqlQuery
@@ -25,7 +28,7 @@ abstract class SqlQuery extends Query
 		$this->connection = $connection;
 	}
 
-	abstract protected function buildQuery(): string;
+	abstract protected function buildQuery(): Selection;
 	abstract protected function getModel(): Model;
 
 	/**
@@ -35,8 +38,7 @@ abstract class SqlQuery extends Query
 	 */
 	public function find(): \Iterator
 	{
-		$results = $this->query($this->buildQuery());
-		foreach($results as $result)
+		foreach($this->buildQuery() as $result)
 		{
 			$model = $this->getModel();
 			$this->setProperties($model, $result);
@@ -51,7 +53,7 @@ abstract class SqlQuery extends Query
 	 */
 	public function findOne(): ?Model
 	{
-		$result = $this->query($this->buildQuery())->fetch();
+		$result = $this->buildQuery()->fetch();
 		$model = $this->getModel();
 		$this->setProperties($model, $result);
 		return $model;
@@ -64,9 +66,8 @@ abstract class SqlQuery extends Query
 	 */
 	public function findAll(): array
 	{
-		$results = $this->query($this->buildQuery());
 		$models = [];
-		foreach($results as $result)
+		foreach($this->buildQuery() as $result)
 		{
 			$model = $this->getModel();
 			$this->setProperties($model, $result);
@@ -75,10 +76,10 @@ abstract class SqlQuery extends Query
 		return $models;
 	}
 
-	protected function setProperties(Model $model, Row $result)
+	protected function setProperties(Model $model, ActiveRow $result)
 	{
 		$dataDefinition = $model->getDataDefinition();
-		foreach($result as $key => $value)
+		foreach($result->toArray() as $key => $value)
 		{
 			$field = $dataDefinition->getField($key);
 			if($field && $field->isReadable())

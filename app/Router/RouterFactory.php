@@ -16,7 +16,12 @@ final class RouterFactory
 	{
 		$router = new RouteList;
 		//$router->addRoute('<presenter>/<action>[/<id>]', 'Homepage:default');
-		$router->addRoute('<presenter=Dream>/<action=default>/[/<id>]', 'Dream:default');
+
+		$router->addRoute('<presenter=Dream>/<action=default>[/<id>]', [
+			'id' => [
+				Nette\Routing\Route::PATTERN => '[a-f0-9\-]+',
+			],
+		]);
 		return $router;
 	}
 }
