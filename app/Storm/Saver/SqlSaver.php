@@ -6,7 +6,17 @@ namespace App\Storm\Saver;
 use App\Storm\Model\Model;
 use Nette\Database\Context;
 
-abstract class SqlSaver extends Saver
+/**
+ * Class SqlSaver
+ *
+ * Used to persist any Models to a SQL database.
+ * This is a generic saver class and will attempt to use the 'id" field
+ * as the primary key and the model name as the table name.
+ * If you need custom behavior, extend from this and override methods.
+ *
+ * @package App\Storm\Saver
+ */
+class SqlSaver extends Saver
 {
 	/** @var Context $connection */
 	protected $connection;
@@ -22,18 +32,33 @@ abstract class SqlSaver extends Saver
 
 	/**
 	 * In order to save any Model, we need to know it's PK.
+	 * This defaults to ['id'] for normal models, and will need
+	 * to be overridden for custom ones.
 	 *
 	 * @return array
 	 */
-	abstract public function getPrimaryKey(): array;
+	public function getPrimaryKey(): array
+	{
+		return ['id'];
+	}
 
 	/**
 	 * Once we have the PK and table name, we can pretty easily
 	 * perform an insert statement.
 	 *
+	 * By default gets the database table name from the model name.
+	 *
+	 * @param Model $model
 	 * @return string
 	 */
-	abstract public function getTableName(): string;
+	public function getTableName(Model $model): string
+	{
+		$rc = new \ReflectionClass($model);
+		$shortClassName = $rc->getShortName();
+		$tableName = str_replace('Model', '', $shortClassName);
+		$tableName = strtolower($tableName);
+		return $tableName;
+	}
 
 	public function save(Model $model)
 	{
@@ -49,7 +74,7 @@ abstract class SqlSaver extends Saver
 
 	public function update(Model $model): int
 	{
-		$tableName = $this->getTableName();
+		$tableName = $this->getTableName($model);
 		$fields = $model->getDataDefinition();
 
 		$updateFields = [];
@@ -71,7 +96,7 @@ abstract class SqlSaver extends Saver
 
 	public function insert(Model $model)
 	{
-		$tableName = $this->getTableName();
+		$tableName = $this->getTableName($model);
 		$fields = $model->getDataDefinition();
 
 		$insertFields = [];

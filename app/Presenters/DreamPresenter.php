@@ -62,8 +62,17 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 		$dream->setDreamtAt($dreamtAt);
 		$dream->setDescription($dreamPost['description']);
 
-		$dreamSaver = new DreamSaver($this->database);
+		$dreamSaver = new SqlSaver($this->database);
 		$dreamSaver->save($dream);
+
+		$this->redirect('show', [
+			'id' => $dream->getId()
+		]);
+	}
+
+	public function renderTest()
+	{
+		$dream = DreamQuery::create($this->database)->findOne();
 
 		$this->sendResponse(new Nette\Application\Responses\TextResponse("Hello, world!"));
 	}

@@ -7,6 +7,7 @@ namespace App\Storm\Query;
 use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
 use App\Storm\Model\DreamModel;
+use Nette\Database\Context;
 use Nette\Database\Table\Selection;
 
 class DreamQuery extends SqlQuery
@@ -32,7 +33,7 @@ class DreamQuery extends SqlQuery
 
 	protected function buildQuery(): Selection
 	{
-		$dreams = $this->connection->table('dreams');
+		$dreams = $this->connection->table('dream');
 
 		if($this->scopeId)
 		{
@@ -67,5 +68,10 @@ class DreamQuery extends SqlQuery
 	public function findAll(): array
 	{
 		return parent::findAll();
+	}
+
+	public static function create(Context $connection): self
+	{
+		return new DreamQuery($connection);
 	}
 }
