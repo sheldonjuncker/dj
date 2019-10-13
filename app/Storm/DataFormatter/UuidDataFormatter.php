@@ -53,7 +53,7 @@ class UuidDataFormatter extends DataFormatter
 		}
 		else
 		{
-			return $data;
+			return (string) $data;
 		}
 	}
 }

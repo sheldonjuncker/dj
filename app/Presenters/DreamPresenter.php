@@ -5,6 +5,7 @@ namespace App\Presenters;
 use App\Storm\Model\DreamModel;
 use App\Storm\Query\DreamQuery;
 use App\Storm\Saver\DreamSaver;
+use App\Storm\Saver\SqlSaver;
 use Nette;
 
 final class DreamPresenter extends Nette\Application\UI\Presenter
@@ -61,6 +62,7 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 		$dreamtAt = new Nette\Utils\DateTime($dreamtAt);
 		$dream->setDreamtAt($dreamtAt);
 		$dream->setDescription($dreamPost['description']);
+		$dream->setUserId(1);
 
 		$dreamSaver = new SqlSaver($this->database);
 		$dreamSaver->save($dream);

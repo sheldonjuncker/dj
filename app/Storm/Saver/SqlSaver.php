@@ -3,8 +3,10 @@
 
 namespace App\Storm\Saver;
 
+use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
 use Nette\Database\Context;
+use Rhumsaa\Uuid\Uuid;
 
 /**
  * Class SqlSaver
@@ -98,6 +100,18 @@ class SqlSaver extends Saver
 	{
 		$tableName = $this->getTableName($model);
 		$fields = $model->getDataDefinition();
+
+		$primaryKeyFields = $this->getPrimaryKey();
+
+		//Might need to set a PK if it's a UUID and empty
+		if(count($primaryKeyFields) == 1)
+		{
+			$primaryKeyField = $fields->getField($primaryKeyFields[0]);
+			if($primaryKeyField->getFormatter() instanceof UuidDataFormatter && !$primaryKeyField->getValue())
+			{
+				$primaryKeyField->setValue(Uuid::uuid1());
+			}
+		}
 
 		$insertFields = [];
 		foreach($fields->getFields() as $field)
