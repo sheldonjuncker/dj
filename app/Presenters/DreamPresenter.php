@@ -93,7 +93,7 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 			new WithLabel('Date', new DateInput($model, 'dreamt_at'))
 		);
 		$sorcerer->addElement(
-			new WithLabel('Description', new TextArea($model, 'dreamt_at', [
+			new WithLabel('Description', new TextArea($model, 'description', [
 				'rows' => 6
 			]))
 		);

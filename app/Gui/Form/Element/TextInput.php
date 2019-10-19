@@ -6,32 +6,16 @@ namespace App\Gui\Form\Element;
 
 use App\Storm\Model\Model;
 
-class TextInput extends Element
+class TextInput extends ModelInput
 {
-	/** @var Model $model */
-	protected $model;
-
-	/** @var string $attribute */
-	protected $attribute;
-
-	/** @var array $htmlAttributes */
-	protected $htmlAttributes = [];
-
-	public function __construct(Model $model, string $attribute, array $htmlAttributes = [])
-	{
-		$this->model = $model;
-		$this->attribute = $attribute;
-		$this->htmlAttributes = $htmlAttributes;
-	}
-
 	public function render(bool $return = false): string
 	{
-		$input = new Tag('input', '', [
+		$input = new Tag('input', '', array_merge([
 			'type' => 'text',
-			'name' => $this->attribute,
-			'value' => '',
+			'name' => $this->getName(),
+			'value' => $this->getValue(),
 			'class' => 'form-control'
-		]);
+		], $this->htmlAttributes));
 
 		return $input->render($return);
 	}

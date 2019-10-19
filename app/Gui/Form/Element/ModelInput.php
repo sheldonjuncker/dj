@@ -1,0 +1,44 @@
+<?php
+
+
+namespace App\Gui\Form\Element;
+
+use App\Storm\Model\Model;
+
+abstract class ModelInput extends Input
+{
+	/** @var Model $model */
+	protected $model;
+
+	/** @var string $attribute */
+	protected $attribute;
+
+	/** @var array $htmlAttributes */
+	protected $htmlAttributes = [];
+
+	public function __construct(Model $model, string $attribute, array $htmlAttributes = [])
+	{
+		$this->model = $model;
+		$this->attribute = $attribute;
+		$this->htmlAttributes = $htmlAttributes;
+	}
+
+	protected function getValue(): string
+	{
+		$dataDefinition = $this->model->getDataDefinition();
+		$field = $dataDefinition->getField($this->attribute);
+		if(!$field)
+		{
+			throw new Exception('Model ' . get_class($this->model) . ' has no field ' . $this->attribute . '.');
+		}
+		return (string) $field->getValue();
+	}
+
+	protected function getName(): string
+	{
+		$reflectionClass = new \ReflectionClass($this->model);
+		$shortName = $reflectionClass->getShortName();
+		$prefix = str_replace('Model', '', $shortName);
+		return $prefix . '[' . $this->attribute . ']';
+	}
+}
