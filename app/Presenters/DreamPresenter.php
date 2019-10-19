@@ -2,6 +2,11 @@
 
 namespace App\Presenters;
 
+use App\Gui\Form\Element\DateInput;
+use App\Gui\Form\Element\TextArea;
+use App\Gui\Form\Element\TextInput;
+use App\Gui\Form\Element\WithLabel;
+use App\Gui\Form\Sorcerer;
 use App\Storm\Model\DreamModel;
 use App\Storm\Query\DreamQuery;
 use App\Storm\Saver\DreamSaver;
@@ -75,8 +80,24 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 
 	public function renderTest()
 	{
-		$dream = DreamQuery::create($this->database)->findOne();
+		$this->template->add('sorcerer', $this->getSorcerer(new DreamModel()));
+	}
 
-		$this->sendResponse(new Nette\Application\Responses\TextResponse("Hello, world!"));
+	protected function getSorcerer(DreamModel $model)
+	{
+		$sorcerer = new Sorcerer('/dream/save', 'post');
+		$sorcerer->addElement(
+			new WithLabel('Title', new TextInput($model, 'title'))
+		);
+		$sorcerer->addElement(
+			new WithLabel('Date', new DateInput($model, 'dreamt_at'))
+		);
+		$sorcerer->addElement(
+			new WithLabel('Description', new TextArea($model, 'dreamt_at', [
+				'rows' => 6
+			]))
+		);
+		$sorcerer->addSubmit('Add');
+		return $sorcerer;
 	}
 }
