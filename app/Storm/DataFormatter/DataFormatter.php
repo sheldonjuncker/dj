@@ -32,4 +32,24 @@ class DataFormatter implements IDataFormatter
 	{
 		return $data;
 	}
+
+	/**
+	 * Formats data coming from the UI and being loaded to the model.
+	 *
+	 * @return mixed
+	 */
+	public function formatFromUi($data)
+	{
+		return $data;
+	}
+
+	/**
+	 * Formats data coming from Model and going to the UI.
+	 *
+	 * @return mixed
+	 */
+	public function formatToUi($data)
+	{
+		return $data;
+	}
 }

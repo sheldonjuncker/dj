@@ -3,6 +3,7 @@
 
 namespace App\Gui\Form\Element;
 
+use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\Model\Model;
 
 abstract class ModelInput extends Input
@@ -31,7 +32,7 @@ abstract class ModelInput extends Input
 		{
 			throw new Exception('Model ' . get_class($this->model) . ' has no field ' . $this->attribute . '.');
 		}
-		return (string) $field->getValue();
+		return (string) $field->getValue(DataFieldDefinition::FORMAT_TYPE_TO_UI);
 	}
 
 	protected function getName(): string

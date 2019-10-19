@@ -14,6 +14,12 @@ use App\Storm\Model\Model;
  */
 class DataFieldDefinition
 {
+	const FORMAT_TYPE_NONE = 0;
+	const FORMAT_TYPE_TO_DATA_SOURCE = 1;
+	const FORMAT_TYPE_FROM_DATA_SOURCE = 2;
+	const FORMAT_TYPE_TO_UI = 3;
+	const FORMAT_TYPE_FROM_UI = 4;
+
 	/** @var Model $model Used for reflection */
 	protected $model;
 
@@ -61,16 +67,23 @@ class DataFieldDefinition
 	 * @param bool $format Specifies whether or not to format the value before returning.
 	 * @return mixed
 	 */
-	public function getValue(bool $format = true)
+	public function getValue(int $format = self::FORMAT_TYPE_NONE)
 	{
 		$reflectionProperty = new \ReflectionProperty($this->model, $this->name);
 		$reflectionProperty->setAccessible(true);
 		$value = $reflectionProperty->getValue($this->model);
-		if($format)
+
+		//Handle formatting
+		switch($format)
 		{
-			$value = $this->getFormatter()->formatToDataSource($value);
+			case self::FORMAT_TYPE_TO_DATA_SOURCE:
+				return $this->getFormatter()->formatToDataSource($value);
+			case self::FORMAT_TYPE_TO_UI:
+				return $this->getFormatter()->formatToUi($value);
+			case self::FORMAT_TYPE_NONE:
+			default:
+				return $value;
 		}
-		return $value;
 	}
 
 	/**
@@ -79,14 +92,19 @@ class DataFieldDefinition
 	 * @param bool $format Specifies whether or not to format the value before setting.
 	 * @param mixed $value
 	 */
-	public function setValue($value, bool $format = true)
+	public function setValue($value, int $format = self::FORMAT_TYPE_NONE)
 	{
 		$reflectionProperty = new \ReflectionProperty($this->model, $this->name);
 		$reflectionProperty->setAccessible(true);
 
-		if($format)
+		//Handle formatting
+		switch($format)
 		{
-			$value = $this->getFormatter()->formatFromDataSource($value);
+			case self::FORMAT_TYPE_FROM_DATA_SOURCE:
+				$value = $this->getFormatter()->formatFromDataSource($value);
+				break;
+			case self::FORMAT_TYPE_FROM_UI:
+				$value = $this->getFormatter()->formatFromUi($value);
 		}
 
 		$reflectionProperty->setValue($this->model, $value);

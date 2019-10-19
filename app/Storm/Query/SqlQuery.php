@@ -3,6 +3,7 @@
 
 namespace App\Storm\Query;
 
+use App\Storm\DataDefinition\DataFieldDefinition;
 use Nette\Database\Context;
 use Nette\Database\ResultSet;
 use App\Storm\Model\Model;
@@ -82,7 +83,7 @@ abstract class SqlQuery extends Query
 			$field = $dataDefinition->getField($key);
 			if($field)
 			{
-				$field->setValue($value);
+				$field->setValue($value, DataFieldDefinition::FORMAT_TYPE_FROM_DATA_SOURCE);
 			}
 		}
 	}

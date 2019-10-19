@@ -10,7 +10,7 @@ class DateInput extends ModelInput
 {
 	public function render(bool $return = false): string
 	{
-		$input = new Tag('input', '', [
+		$input = new Tag('input', '', array_merge([
 			'type' => 'hidden',
 			'name' => $this->getName(),
 			'value' => $this->getValue(),
@@ -18,7 +18,7 @@ class DateInput extends ModelInput
 			'data-flatpickr' => '',
 			'data-default-date' => '',
 			'data-alt-input' => 'true'
-		]);
+		], $this->htmlAttributes));
 
 		return $input->render($return);
 	}

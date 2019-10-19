@@ -3,6 +3,7 @@
 
 namespace App\Storm\Saver;
 
+use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
 use Nette\Database\Context;
@@ -83,7 +84,7 @@ class SqlSaver extends Saver
 		$primaryKeyFields = $this->getPrimaryKey();
 		foreach($fields->getFields() as $field)
 		{
-			$updateFields[$field->getName()] = $field->getValue();
+			$updateFields[$field->getName()] = $field->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE);
 		}
 
 		$updateFields = array_diff_key($updateFields, array_flip($primaryKeyFields));
@@ -91,7 +92,7 @@ class SqlSaver extends Saver
 		$update = $this->connection->table($tableName);
 		foreach($primaryKeyFields as $primaryKeyField)
 		{
-			$update->where($primaryKeyField, $fields->getField($primaryKeyField)->getValue());
+			$update->where($primaryKeyField, $fields->getField($primaryKeyField)->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE));
 		}
 		return $update->update($updateFields);
 	}
@@ -107,16 +108,16 @@ class SqlSaver extends Saver
 		if(count($primaryKeyFields) == 1)
 		{
 			$primaryKeyField = $fields->getField($primaryKeyFields[0]);
-			if($primaryKeyField->getFormatter() instanceof UuidDataFormatter && !$primaryKeyField->getValue())
+			if($primaryKeyField->getFormatter() instanceof UuidDataFormatter && !$primaryKeyField->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE))
 			{
-				$primaryKeyField->setValue(Uuid::uuid1());
+				$primaryKeyField->setValue(Uuid::uuid1(), DataFieldDefinition::FORMAT_TYPE_NONE);
 			}
 		}
 
 		$insertFields = [];
 		foreach($fields->getFields() as $field)
 		{
-			$insertFields[$field->getName()] = $field->getValue();
+			$insertFields[$field->getName()] = $field->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE);
 		}
 
 		return $this->connection->table($tableName)->insert($insertFields);
@@ -134,7 +135,7 @@ class SqlSaver extends Saver
 		foreach($primaryKeyFields as $primaryKeyField)
 		{
 			$field = $fields->getField($primaryKeyField);
-			if($field && $field->getValue(false))
+			if($field && $field->getValue(DataFieldDefinition::FORMAT_TYPE_NONE))
 			{
 				return false;
 			}
