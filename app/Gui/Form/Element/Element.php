@@ -3,6 +3,8 @@
 
 namespace App\Gui\Form\Element;
 
+use App\Gui\Form\Sorcerer;
+
 /**
  * Class Element
  *
@@ -15,6 +17,17 @@ namespace App\Gui\Form\Element;
  */
 abstract class Element
 {
+	/** @var  Sorcerer $form */
+	protected $form;
+
+	/**
+	 * @param Sorcerer $form
+	 */
+	public function setForm(Sorcerer $form)
+	{
+		$this->form = $form;
+	}
+
 	/**
 	 * Returns or renders the HTML for the element.
 	 *

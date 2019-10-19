@@ -90,6 +90,7 @@ class SqlSaver extends Saver
 		$updateFields = array_diff_key($updateFields, array_flip($primaryKeyFields));
 
 		$update = $this->connection->table($tableName);
+
 		foreach($primaryKeyFields as $primaryKeyField)
 		{
 			$update->where($primaryKeyField, $fields->getField($primaryKeyField)->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE));
@@ -104,11 +105,12 @@ class SqlSaver extends Saver
 
 		$primaryKeyFields = $this->getPrimaryKey();
 
+
 		//Might need to set a PK if it's a UUID and empty
 		if(count($primaryKeyFields) == 1)
 		{
 			$primaryKeyField = $fields->getField($primaryKeyFields[0]);
-			if($primaryKeyField->getFormatter() instanceof UuidDataFormatter && !$primaryKeyField->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE))
+			if($primaryKeyField->getFormatter() instanceof UuidDataFormatter && !$primaryKeyField->getValue(DataFieldDefinition::FORMAT_TYPE_NONE))
 			{
 				$primaryKeyField->setValue(Uuid::uuid1(), DataFieldDefinition::FORMAT_TYPE_NONE);
 			}
@@ -135,7 +137,7 @@ class SqlSaver extends Saver
 		foreach($primaryKeyFields as $primaryKeyField)
 		{
 			$field = $fields->getField($primaryKeyField);
-			if($field && $field->getValue(DataFieldDefinition::FORMAT_TYPE_NONE))
+			if($field && ($value = $field->getValue 	(DataFieldDefinition::FORMAT_TYPE_NONE)))
 			{
 				return false;
 			}

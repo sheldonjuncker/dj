@@ -6,6 +6,7 @@ namespace App\Gui\Form;
 use App\Gui\Form\Element\Element;
 use App\Gui\Form\Element\SubmitInput;
 use App\Gui\Form\Element\Tag;
+use App\Storm\Model\Model;
 
 /**
  * Class Sorcerer
@@ -24,17 +25,27 @@ use App\Gui\Form\Element\Tag;
  */
 class Sorcerer
 {
+	const EDIT = 'edit';
+	const CREATE = 'create';
+
+	/** @var Model $model */
+	protected $model;
+
 	/** @var  string $action */
 	protected $action;
 
 	/** @var  string $method */
 	protected $method;
 
+	/** @var  string $mode create|edit */
+	protected $mode;
+
 	/** @var Element[] $elements The various HTML inputs and elements the form contains. */
 	protected $elements = [];
 
-	public function __construct(string $action = '', string $method = 'post')
+	public function __construct(Model $model, string $action = '', string $method = 'post')
 	{
+		$this->model = $model;
 		$this->action = $action;
 		$this->method = $method;
 	}
@@ -60,12 +71,24 @@ class Sorcerer
 		$this->method = $method;
 	}
 
+	/**
+	 * @param string $mode
+	 */
+	public function setMode(string $mode)
+	{
+		if(!in_array($mode, [self::CREATE, self::EDIT]))
+		{
+			throw new Hex('Invalid form mode ' . $mode . ', only create and edit are allowed.');
+		}
+		$this->mode = $mode;
+	}
 
 	/**
 	 * @param Element $element
 	 */
 	public function addElement(Element $element)
 	{
+		$element->setForm($this);
 		$this->elements[] = $element;
 	}
 
@@ -77,8 +100,10 @@ class Sorcerer
 		}
 	}
 
-	public function addSubmit(string $value, string $name = '', array $htmlAttributes = [])
+	public function addSubmit( array $htmlAttributes = [])
 	{
+		$value = $this->mode == self::EDIT ? 'Update' : 'Add';
+		$name = $htmlAttributes['name'] ?? ('_' . strtolower($value));
 		$this->addElement(
 			new SubmitInput($value, $name, $htmlAttributes)
 		);

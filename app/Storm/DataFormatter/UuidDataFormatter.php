@@ -20,6 +20,12 @@ class UuidDataFormatter extends DataFormatter
 
 	public function formatFromDataSource($data): string
 	{
+		//Don't format if it's empty
+		if(!$data)
+		{
+			return $data;
+		}
+
 		//If the data is coming to us as UUID, we are good
 		if($this->isUuid($data))
 		{

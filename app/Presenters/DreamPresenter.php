@@ -3,13 +3,13 @@
 namespace App\Presenters;
 
 use App\Gui\Form\Element\DateInput;
+use App\Gui\Form\Element\HiddenInput;
 use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
 use App\Storm\Model\DreamModel;
 use App\Storm\Query\DreamQuery;
-use App\Storm\Saver\DreamSaver;
 use App\Storm\Saver\SqlSaver;
 use Nette;
 
@@ -39,27 +39,18 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 
 	public function renderEdit(string $id)
 	{
-		$dreamQuery = new DreamQuery($this->database);
-		$dream = $dreamQuery->id($id)->findOne();
-		$this->template->add('dream', $dream);
+		$dream = $this->getDream($id);
+		$this->template->add('sorcerer', $this->getSorcerer($dream, 'edit'));
 	}
 
 	public function renderNew()
 	{
-
+		$this->template->add('sorcerer', $this->getSorcerer(new DreamModel(), 'create'));
 	}
 
 	public function renderSave(string $id = '')
 	{
-		if($id)
-		{
-			$dreamQuery = new DreamQuery($this->database);
-			$dream = $dreamQuery->id($id)->findOne();
-		}
-		else
-		{
-			$dream = new DreamModel();
-		}
+		$dream = $this->getDream($id, true);
 
 		$dreamPost = $this->getHttpRequest()->getPost('Dream') ?: [];
 
@@ -78,14 +69,24 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 		]);
 	}
 
-	public function renderTest()
+	protected function getSorcerer(DreamModel $model, string $mode)
 	{
-		$this->template->add('sorcerer', $this->getSorcerer(new DreamModel()));
-	}
+		$action = '/dream/save';
+		if($mode == Sorcerer::EDIT)
+		{
+			$action .= '/' . $model->getId();
+		}
 
-	protected function getSorcerer(DreamModel $model)
-	{
-		$sorcerer = new Sorcerer('/dream/save', 'post');
+		$sorcerer = new Sorcerer($model, $action, 'post');
+		$sorcerer->setMode($mode);
+
+		if($mode == Sorcerer::EDIT)
+		{
+			$sorcerer->addElement(
+				new HiddenInput($model, 'id')
+			);
+		}
+
 		$sorcerer->addElement(
 			new WithLabel('Title', new TextInput($model, 'title'))
 		);
@@ -97,7 +98,31 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 				'rows' => 6
 			]))
 		);
-		$sorcerer->addSubmit('Add');
+		$sorcerer->addSubmit();
 		return $sorcerer;
+	}
+
+	/**
+	 * Loads the dream model for usage by the controller.
+	 *
+	 * @param string $id
+	 * @param bool $createNew Whether or not to return an empty object when it can't be found.
+	 * @return DreamModel|null
+	 */
+	public function getDream(string $id, bool $createNew = false): ?DreamModel
+	{
+		$dreamQuery = new DreamQuery($this->database);
+		if($dream = $dreamQuery->id($id)->findOne())
+		{
+			return $dream;
+		}
+		else if($createNew)
+		{
+			return new DreamMOdel();
+		}
+		else
+		{
+			return NULL;
+		}
 	}
 }
