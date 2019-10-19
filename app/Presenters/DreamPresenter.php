@@ -57,6 +57,7 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 		}
 
 		$dreamPost = $this->getHttpRequest()->getPost('Dream') ?: [];
+
 		$dream->setTitle($dreamPost['title']);
 		$dreamtAt = $dreamPost['dreamt_at'] ?? 'now';
 		$dreamtAt = new Nette\Utils\DateTime($dreamtAt);
