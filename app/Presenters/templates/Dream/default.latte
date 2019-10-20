@@ -1,47 +1,61 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Dream Journal | Celial</title>
-		<link rel="stylesheet" type="text/css" href="/css/main.css">
-	</head>
-	<body>
-		<!-- Header -->
-		<h2>Welcome to the Dream Journal.</h2>
-
-		<hr>
-
-		<!-- Menu -->
-		<ul class="main-menu">
-			<li>
-				<a href="/dream/new">New Dream</a>
-			</li>
-		</ul>
-
-		<hr>
-
-		<h3>My Dreams</h3>
-
-		<hr>
-
-		{foreach $dreams as $dream}
-			<div class="dream">
-				<div class="dream-header">
-					<div class="dream-title header-text">
-						{$dream->getTitle()}
-					</div>
-					<div class="dream-date">{$dream->getFormattedDate()}</div>
-				</div>
-				<div class="dream-body">
-					<p>{$dream->getDescription()}</p>
-				</div>
-				<div class="dream-actions">
-					<ul>
-						<li><a href="/dream/show/{$dream->getId()}">Show</a></li>
-						<li><a href="/dream/edit/{$dream->getId()}">Edit</a></li>
-					</ul>
-				</div>
+{layout '../@layout.latte'}
+{block content}
+	<div class="breadcrumb-bar navbar bg-white sticky-top">
+		<div class="col-lg-10">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/dream">Dream Journal</a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">Overview</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="col-lg-2">
+			<a class="btn btn-primary" href="/dream/new">New</a>
+		</div>
+	</div>
+	<div class="container">
+		<br>
+		<div class="row content-list-head">
+			<div class="col-auto">
+				<h3>Recent Dreams</h3>
 			</div>
-			<hr>
-		{/foreach}
-	</body>
-</html>
+			<div class="col-md-auto">
+				<ul class="nav nav-pills nav-small">
+					<li class="nav-item">
+						<a class="nav-link" data-toggle="tab" role="tab" aria-controls="day" aria-selected="false">Day</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" data-toggle="tab" role="tab" aria-controls="week" aria-selected="true">Week</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" data-toggle="tab" role="tab" aria-controls="month" aria-selected="false">Month</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<hr>
+
+		<ol class="list-group list-group-activity">
+			{foreach $dreams as $dream}
+				<li class="list-group-item">
+					<div class="media align-items-center">
+						<ul class="avatars">
+							<li>
+								<div class="avatar bg-primary">
+									<i class="material-icons">single_bed</i>
+								</div>
+							</li>
+						</ul>
+						<div class="media-body">
+							<div>
+								<a href="/dream/show/{$dream->getId()}" class="A-filter-by-text">{$dream->getTitle()|truncate:64}</a>
+							</div>
+							<span class="text-small">{$dream->getFormattedDate()}</span>
+						</div>
+					</div>
+				</li>
+			{/foreach}
+		</ol>
+	</div>
+{/block}
