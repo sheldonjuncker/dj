@@ -64,7 +64,7 @@ class DataFieldDefinition
 	/**
 	 * Gets the value of a model field.
 	 *
-	 * @param bool $format Specifies whether or not to format the value before returning.
+	 * @param int $format Specifies the formatting method to use.
 	 * @return mixed
 	 */
 	public function getValue(int $format = self::FORMAT_TYPE_NONE)

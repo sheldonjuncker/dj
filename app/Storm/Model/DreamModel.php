@@ -8,7 +8,7 @@ use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\UuidDataFormatter;
 use Nette;
 
-class DreamModel implements Model
+class DreamModel extends BaseModel implements Model
 {
 	public function getDataDefinition(): DataDefinition
 	{
