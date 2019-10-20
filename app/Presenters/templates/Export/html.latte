@@ -1,0 +1,15 @@
+<i>data export by {$userName} at {$currentTime}</i>
+<hr>
+<h2 style="font-family:Calibri Light, Verdana;">{$userName}'s Dream Journal</h2>
+{foreach $dateToDreams as $date => $dreams}
+	<h3 style="color:#002a97;font-family:Calibri Light, Verdana;margin-bottom:0;padding-bottom:0;">{$date}</h3>
+	{foreach $dreams as $key => $dream}
+	<p style="font-family:Calibri, Arial; margin-top:5;">
+		<b>Dream #{$key + 1} -- {$dream->getTitle()}</b>
+		<br>
+		<span>{$dream->getDescription()|breaklines}</span>
+	</p>
+	{/foreach}
+	<hr>
+{/foreach}
+<i>exported a total of <b>{$dreamCount}</b> dreams</i>

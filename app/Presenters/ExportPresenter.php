@@ -26,9 +26,53 @@ class ExportPresenter extends Presenter
 	/**
 	 * Takes all of a user's dreams and exports them as JSON.
 	 *
+	 * @param string $type Type of output to generate json|html
 	 * @throws \Exception
 	 */
-	public function renderExecute()
+	public function renderExecute(string $type)
+	{
+		if($type == 'html')
+		{
+			$this->exportToHtml();
+		}
+		else
+		{
+			$this->exportToJson();
+		}
+	}
+
+	protected function exportToHtml()
+	{
+		$this->template->setFile(__DIR__ . '/templates/Export/html.latte');
+		$dreamQuery = new DreamQuery($this->database);
+
+		//Group dreams by date
+		$dateToDreams = [];
+		$dreamCount = 0;
+
+		foreach($dreamQuery->find() as $dream)
+		{
+			$dreamCount++;
+			$dreamDate = $dream->getFormattedDate();
+			if(!isset($dateToDreams[$dreamDate]))
+			{
+				$dateToDreams[$dreamDate] = [];
+			}
+			$dateToDreams[$dreamDate][] = $dream;
+		}
+
+		$this->template->add('dateToDreams', $dateToDreams);
+		$this->template->add('dreamCount', $dreamCount);
+		$this->template->add('userName', 'Sheldon Juncker');
+		$this->template->add('currentTime', date('l, F dS Y'));
+	}
+
+	/**
+	 * Exports dreams to JSON and sends file.
+	 *
+	 * @throws \Exception
+	 */
+	protected function exportToJson()
 	{
 		$exportId = (string) round(microtime(true));
 		$tempFileName = __DIR__ . '/../../temp/export/dream_export_' . $exportId . '.json';
