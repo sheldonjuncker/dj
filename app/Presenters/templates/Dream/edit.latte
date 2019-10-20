@@ -1,13 +1,19 @@
 {layout '../@layout.latte'}
 {block content}
 	<div class="breadcrumb-bar navbar bg-white sticky-top">
-		<nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="index.html">Dream Journal</a>
-				</li>
-				<li class="breadcrumb-item active" aria-current="page">Edit Dream</li>
-			</ol>
-		</nav>
+		<div class="col-lg-9">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="index.html">Dream Journal</a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">Edit Dream</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="col-lg-3">
+			<button class="btn btn-primary">New</button>
+			<a class="btn btn-secondary" href="/dream/show/{$dream->getId()}">Cancel</a>
+		</div>
 	</div>
 	<div class="container">
 		<div class="row justify-content-center">

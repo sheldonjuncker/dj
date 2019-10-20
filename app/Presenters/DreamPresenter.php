@@ -40,6 +40,7 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 	public function renderEdit(string $id)
 	{
 		$dream = $this->getDream($id);
+		$this->template->add('dream', $dream);
 		$this->template->add('sorcerer', $this->getSorcerer($dream, 'edit'));
 	}
 
@@ -118,7 +119,7 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 		}
 		else if($createNew)
 		{
-			return new DreamMOdel();
+			return new DreamModel();
 		}
 		else
 		{

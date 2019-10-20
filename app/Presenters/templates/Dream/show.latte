@@ -1,44 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Dream Journal | Celial</title>
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
-</head>
-<body>
-<!-- Header -->
-<h2>Welcome to the Dream Journal.</h2>
-
-<hr>
-
-<!-- Menu -->
-<ul>
-	<li>
-		<a href="/dream/new">New Dream</a>
-	</li>
-</ul>
-
-<hr>
-
-<h3>Show Dream</h3>
-
-<hr>
-
-<div class="dream">
-	<div class="dream-header">
-		<div class="dream-title header-text">
-			{$dream->getTitle()}
+{layout '../@layout.latte'}
+{block content}
+	<div class="breadcrumb-bar navbar bg-white sticky-top">
+			<div class="col-lg-9">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index.html">Dream Journal</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">Show Dream</li>
+					</ol>
+				</nav>
+			</div>
+		<div class="col-lg-3">
+			<a class="btn btn-primary" href="/dream/new">New</a>
+			<a class="btn btn-secondary" href="/dream/edit/{$dream->getId()}">Edit</a>
 		</div>
-		<div class="dream-date">{$dream->getFormattedDate()}</div>
 	</div>
-	<div class="dream-body">
-		<p>{$dream->getDescription()}</p>
+	<div class="container">
+		<br>
+		<div class="row col-lg-12">
+			<div class="col-lg-9">
+				<h4>{$dream->getTitle()}</h4>
+			</div>
+			<div class="col-lg-3 text-center">
+				{$dream->getFormattedDate()}
+			</div>
+		</div>
+		<hr>
+		<div class="row col-lg-12">
+			<p>{$dream->getDescription()|breaklines}</p>
+		</div>
 	</div>
-	<div class="dream-actions">
-		<ul>
-			<li><a href="/dream/edit/{$dream->getId()}">Edit</a></li>
-		</ul>
-	</div>
-</div>
-
-</body>
-</html>
+{/block}

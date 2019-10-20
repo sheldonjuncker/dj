@@ -103,6 +103,6 @@ class DreamModel implements Model
 
 	public function getFormattedDate(): string
 	{
-		return date('d.m.Y', $this->dreamt_at->getTimestamp());
+		return date('l, F dS Y', $this->dreamt_at->getTimestamp());
 	}
 }
