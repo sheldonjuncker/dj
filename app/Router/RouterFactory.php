@@ -7,7 +7,6 @@ namespace App\Router;
 use Nette;
 use Nette\Application\Routers\RouteList;
 
-
 final class RouterFactory
 {
 	use Nette\StaticClass;
@@ -15,9 +14,9 @@ final class RouterFactory
 	public static function createRouter(): RouteList
 	{
 		$router = new RouteList;
-		//$router->addRoute('<presenter>/<action>[/<id>]', 'Homepage:default');
-
-		$router->addRoute('<presenter=Dream>/<action=default>[/<id>]', [
+		$router->addRoute('<presenter>/<action>[/<id>]', [
+			'presenter' => 'Dream',
+			'action' => 'default',
 			'id' => [
 				Nette\Routing\Route::PATTERN => '[a-f0-9\-]+',
 			],
