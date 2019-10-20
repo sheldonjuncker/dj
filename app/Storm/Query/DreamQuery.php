@@ -14,6 +14,9 @@ class DreamQuery extends SqlQuery
 {
 	protected $scopeId;
 
+	/** @var array $orderBy An array of order by conditions */
+	protected $orderBy = [];
+
 	/**
 	 * Primary key scope.
 	 *
@@ -26,6 +29,19 @@ class DreamQuery extends SqlQuery
 		return $this;
 	}
 
+	/**
+	 * Orders by any field on the Model.
+	 *
+	 * @param string $field
+	 * @param string $direction
+	 */
+	public function orderBy(string $field, string $direction = 'ASC'): self
+	{
+		$direction = strtoupper($direction);
+		$this->orderBy[] = "$field $direction";
+		return $this;
+	}
+
 	protected function getModel(): Model
 	{
 		return new DreamModel();
@@ -35,7 +51,12 @@ class DreamQuery extends SqlQuery
 	{
 		$dreams = $this->connection->table('dream');
 
-		if($this->scopeId)
+		foreach ($this->orderBy as $orderBy)
+		{
+			$dreams->order($orderBy);
+		}
+
+		if($this->scopeId !== NULL)
 		{
 			$dreams->where('id', $this->scopeId);
 		}

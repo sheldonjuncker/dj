@@ -38,6 +38,10 @@
 
 		<ol class="list-group list-group-activity">
 			{foreach $dreams as $dream}
+				{if !$dream}
+					<hr />
+					{continueIf true}
+				{/if}
 				<li class="list-group-item">
 					<div class="media align-items-center">
 						<ul class="avatars">

@@ -26,8 +26,27 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 
 	public function renderDefault()
 	{
-		$dreams = new DreamQuery($this->database);
-		$this->template->add('dreams', $dreams->find());
+		$dreamQuery = new DreamQuery($this->database);
+		$dreams = $dreamQuery->orderBy('dreamt_at', 'DESC')->findAll();
+
+		$dreamsByDay = [];
+
+		if(count($dreams))
+		{
+			$currentDay = $dreams[0]->getFormattedDate() ?? '';
+			foreach($dreams as $dream)
+			{
+				$dreamDay = $dream->getFormattedDate();
+				if($dreamDay != $currentDay)
+				{
+					$currentDay = $dreamDay;
+					$dreamsByDay[] = NULL;
+				}
+				$dreamsByDay[] = $dream;
+			}
+		}
+
+		$this->template->add('dreams', $dreamsByDay);
 	}
 
 	public function renderShow(string $id)
@@ -113,7 +132,7 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 	public function getDream(string $id, bool $createNew = false): ?DreamModel
 	{
 		$dreamQuery = new DreamQuery($this->database);
-		if($dream = $dreamQuery->id($id)->findOne())
+		if($id && ($dream = $dreamQuery->id($id)->findOne()))
 		{
 			return $dream;
 		}
