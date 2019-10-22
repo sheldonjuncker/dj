@@ -2,10 +2,17 @@
 
 namespace App\Presenters;
 
+use App\Gui\Form\Element\DateInput;
+use App\Gui\Form\Element\DropDownList;
+use App\Gui\Form\Element\WithLabel;
+use App\Gui\Form\Sorcerer;
+use App\Storm\Form\ExportFormModel;
 use App\Storm\Query\DreamQuery;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Context;
+use Nette\Http\Request;
+use Nette\Utils\DateTime;
 
 class ExportPresenter extends Presenter
 {
@@ -20,7 +27,33 @@ class ExportPresenter extends Presenter
 
 	public function renderDefault()
 	{
+		print date("Y-m-d", time());
+		$formModel = new ExportFormModel();
+		$formModel->format = 'json';
+		$formModel->start_date = new DateTime();
+		$formModel->end_date = new DateTime();
 
+		$sorcerer = new Sorcerer($formModel, '/export/execute', 'post');
+
+		$sorcerer->addElement(
+			new WithLabel('Start Date', new DateInput($formModel, 'start_date'))
+		);
+
+		$sorcerer->addElement(
+			new WithLabel('End Date', new DateInput($formModel, 'end_date'))
+		);
+
+		$dropDownList = new DropDownList($formModel, 'format');
+		$dropDownList->addOptions($formModel->getFormatListOptions());
+		$sorcerer->addElement(
+			new WithLabel('Format', $dropDownList)
+		);
+
+		$sorcerer->addSubmit([
+			'value' => 'Export'
+		]);
+
+		$this->template->add('sorcerer', $sorcerer);
 	}
 
 	/**
@@ -29,9 +62,11 @@ class ExportPresenter extends Presenter
 	 * @param string $type Type of output to generate json|html
 	 * @throws \Exception
 	 */
-	public function renderExecute(string $type)
+	public function renderExecute()
 	{
-		if($type == 'html')
+		$post = $this->getHttpRequest()->getPost('ExportForm');
+		$format = $post['format'] ?: 'json';
+		if($format == 'html')
 		{
 			$this->exportToHtml();
 		}

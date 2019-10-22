@@ -15,12 +15,6 @@ final class RouterFactory
 	{
 		$router = new RouteList;
 
-		$router->addRoute('export/execute/<type>', [
-				'presenter' => 'Export',
-				'action' => 'execute'
-			]
-		);
-
 		$router->addRoute('<presenter>/<action>[/<id>]', [
 			'presenter' => 'Dream',
 			'action' => 'default',
