@@ -27,7 +27,6 @@ class ExportPresenter extends Presenter
 
 	public function renderDefault()
 	{
-		print date("Y-m-d", time());
 		$formModel = new ExportFormModel();
 		$formModel->format = 'json';
 		$formModel->start_date = new DateTime();
@@ -59,7 +58,6 @@ class ExportPresenter extends Presenter
 	/**
 	 * Takes all of a user's dreams and exports them as JSON.
 	 *
-	 * @param string $type Type of output to generate json|html
 	 * @throws \Exception
 	 */
 	public function renderExecute()
