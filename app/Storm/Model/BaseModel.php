@@ -5,6 +5,7 @@ namespace App\Storm\Model;
 
 
 use App\Storm\DataDefinition\DataFieldDefinition;
+use Nette\Schema\Elements\Base;
 
 abstract class BaseModel implements Model
 {
@@ -33,5 +34,26 @@ abstract class BaseModel implements Model
 	{
 		$array = $this->toArray($format);
 		return json_encode($array, JSON_PRETTY_PRINT);
+	}
+
+	/**
+	 * Creates a Model from an array.
+	 * Needs to be refactored into a Query class which uses an array data source.
+	 *
+	 * @param array $data
+	 * @return BaseModel
+	 */
+	public static function fromArray(array $data): BaseModel
+	{
+		$model = new static();
+		$dataDefinition = $model->getDataDefinition();
+		foreach($data as $key => $value)
+		{
+			if($field = $dataDefinition->getField($key))
+			{
+				$field->setValue($value);
+			}
+		}
+		return $model;
 	}
 }

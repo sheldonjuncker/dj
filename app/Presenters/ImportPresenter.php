@@ -4,11 +4,14 @@ namespace App\Presenters;
 
 use App\Gui\Form\Element\FileInput;
 use App\Storm\Form\ImportFormModel;
+use App\Tool\DreamImporter;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Context;
 use App\Gui\Form\Sorcerer;
 use App\Gui\Form\Element\DropDownList;
 use App\Gui\Form\Element\WithLabel;
+use Nette\FileNotFoundException;
+use Nette\Http\FileUpload;
 
 class ImportPresenter extends Presenter
 {
@@ -51,33 +54,21 @@ class ImportPresenter extends Presenter
 	 */
 	public function renderExecute()
 	{
-		$post = $this->getHttpRequest()->getPost('ExportForm');
+		$post = $this->getHttpRequest()->getPost('ImportForm');
 		$format = $post['format'] ?: 'json';
-		if($format == 'text')
+
+		$request = $this->getHttpRequest();
+		$file = $request->getFile('ImportForm')['file'] ?? NULL;
+
+		if(!$file instanceof FileUpload)
 		{
-			$this->importFromHtml();
+			throw new FileNotFoundException('No file uploaded.');
 		}
-		else
-		{
-			$this->importFromJson();
-		}
-	}
 
-	/**
-	 * Imports
-	 */
-	protected function importFromHtml()
-	{
-
-	}
-
-	/**
-	 * Exports dreams to JSON and sends file.
-	 *
-	 * @throws \Exception
-	 */
-	protected function importFromJson()
-	{
-
+		$filePath = $file->getTemporaryFile();
+		$dreamImporter = new DreamImporter($filePath, $format, $this->database);
+		$dreamImporter->execute();
+		$this->flashMessage('Successfully imported dreams.', 'success');
+		$this->redirect('/import');
 	}
 }

@@ -120,6 +120,7 @@ class Sorcerer
 		$form = new Tag('form');
 		$form->addAttribute('action', $this->action);
 		$form->addAttribute('method', $this->method);
+		$form->addAttribute('enctype', 'multipart/form-data');
 
 		foreach($this->elements as $element)
 		{
