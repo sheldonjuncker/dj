@@ -8,7 +8,29 @@ use Nette\Utils\DateTime;
 
 class DateFormatter extends DataFormatter
 {
-	//Nette handles formatting to/from DB
+	public function formatFromDataSource($data)
+	{
+		if(!$data instanceof DateTime)
+		{
+			return new DateTime($data);
+		}
+		else
+		{
+			return $data;
+		}
+	}
+
+	public function formatToDataSource($data)
+	{
+		if(!$data instanceof DateTime)
+		{
+			return new DateTime($data);
+		}
+		else
+		{
+			return $data;
+		}
+	}
 
 	public function formatToUi($data)
 	{

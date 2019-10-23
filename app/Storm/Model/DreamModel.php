@@ -5,6 +5,7 @@ namespace App\Storm\Model;
 
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\DataDefinition\DataFieldDefinition;
+use App\Storm\DataFormatter\DateFormatter;
 use App\Storm\DataFormatter\UuidDataFormatter;
 use Nette;
 
@@ -17,9 +18,9 @@ class DreamModel extends BaseModel implements Model
 			new DataFieldDefinition('user_id'),
 			new DataFieldDefinition('title'),
 			new DataFieldDefinition('description'),
-			new DataFieldDefinition('dreamt_at'),
-			new DataFieldDefinition('created_at'),
-			new DataFieldDefinition('updated_at')
+			new DataFieldDefinition('dreamt_at', new DateFormatter()),
+			new DataFieldDefinition('created_at', new DateFormatter()),
+			new DataFieldDefinition('updated_at', new DateFormatter())
 		];
 		return new DataDefinition($this, $dataFields);
 	}
@@ -82,7 +83,7 @@ class DreamModel extends BaseModel implements Model
 
 	public function getDescription(): string
 	{
-		return $this->description;
+		return $this->description ?? '';
 	}
 
 	/**

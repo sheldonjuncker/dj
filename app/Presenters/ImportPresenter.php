@@ -69,6 +69,6 @@ class ImportPresenter extends Presenter
 		$dreamImporter = new DreamImporter($filePath, $format, $this->database);
 		$dreamImporter->execute();
 		$this->flashMessage('Successfully imported dreams.', 'success');
-		$this->redirect('/import');
+		$this->redirect('Import:default');
 	}
 }
