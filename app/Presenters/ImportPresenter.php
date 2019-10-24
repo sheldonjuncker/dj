@@ -5,7 +5,6 @@ namespace App\Presenters;
 use App\Gui\Form\Element\FileInput;
 use App\Storm\Form\ImportFormModel;
 use App\Tool\DreamImporter;
-use Nette\Application\UI\Presenter;
 use Nette\Database\Context;
 use App\Gui\Form\Sorcerer;
 use App\Gui\Form\Element\DropDownList;
@@ -13,7 +12,7 @@ use App\Gui\Form\Element\WithLabel;
 use Nette\FileNotFoundException;
 use Nette\Http\FileUpload;
 
-class ImportPresenter extends Presenter
+class ImportPresenter extends BasePresenter
 {
 	/** @var Context $database */
 	protected $database;

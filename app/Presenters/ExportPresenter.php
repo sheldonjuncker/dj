@@ -9,12 +9,10 @@ use App\Gui\Form\Sorcerer;
 use App\Storm\Form\ExportFormModel;
 use App\Storm\Query\DreamQuery;
 use Nette\Application\Responses\FileResponse;
-use Nette\Application\UI\Presenter;
 use Nette\Database\Context;
-use Nette\Http\Request;
 use Nette\Utils\DateTime;
 
-class ExportPresenter extends Presenter
+class ExportPresenter extends BasePresenter
 {
 	/** @var Context $database */
 	protected $database;

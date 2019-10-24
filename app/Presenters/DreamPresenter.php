@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\DateInput;
 use App\Gui\Form\Element\HiddenInput;
 use App\Gui\Form\Element\TextArea;
@@ -13,7 +14,7 @@ use App\Storm\Query\DreamQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette;
 
-final class DreamPresenter extends Nette\Application\UI\Presenter
+final class DreamPresenter extends BasePresenter
 {
 	/** @var Nette\Database\Context $database */
 	protected $database;
@@ -22,10 +23,14 @@ final class DreamPresenter extends Nette\Application\UI\Presenter
 	{
 		parent::__construct();
 		$this->database = $database;
+
+		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
 	}
 
 	public function renderDefault()
 	{
+		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
+
 		$dreamQuery = new DreamQuery($this->database);
 		$dreams = $dreamQuery->orderBy('dreamt_at', 'DESC')->findAll();
 
