@@ -5,10 +5,9 @@ namespace App\Storm\Form;
 
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\DataDefinition\DataFieldDefinition;
-use App\Storm\Model\BaseModel;
 use App\Storm\Model\Model;
 
-class ImportFormModel extends BaseModel implements Model
+class ImportFormModel extends FormModel implements Model
 {
 	public $format;
 	public $file;
@@ -17,7 +16,7 @@ class ImportFormModel extends BaseModel implements Model
 	{
 		$dataDefinition = new DataDefinition($this);
 		$dataDefinition->addDataField(new DataFieldDefinition('format'));
-		$dataDefinition->addDataField(new DataFieldDefinition('format'));
+		$dataDefinition->addDataField(new DataFieldDefinition('file'));
 		return $dataDefinition;
 	}
 

@@ -37,9 +37,6 @@ abstract class ModelInput extends Input
 
 	protected function getName(): string
 	{
-		$reflectionClass = new \ReflectionClass($this->model);
-		$shortName = $reflectionClass->getShortName();
-		$prefix = str_replace('Model', '', $shortName);
-		return $prefix . '[' . $this->attribute . ']';
+		return $this->model->getBaseName() . '[' . $this->attribute . ']';
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\FileInput;
 use App\Storm\Form\ImportFormModel;
 use App\Tool\DreamImporter;
@@ -21,10 +22,14 @@ class ImportPresenter extends BasePresenter
 	{
 		parent::__construct();
 		$this->database = $database;
+
+		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
 	}
 
 	public function renderDefault()
 	{
+		$this->addBreadcrumb(new Breadcrumb('Import', '', true));
+
 		$formModel = new ImportFormModel();
 		$formModel->format = 'json';
 
@@ -53,11 +58,9 @@ class ImportPresenter extends BasePresenter
 	 */
 	public function renderExecute()
 	{
-		$post = $this->getHttpRequest()->getPost('ImportForm');
-		$format = $post['format'] ?: 'json';
-
-		$request = $this->getHttpRequest();
-		$file = $request->getFile('ImportForm')['file'] ?? NULL;
+		$formModel = new ImportFormModel($this->getHttpRequest());
+		$format = $formModel->format;
+		$file = $formModel->file;
 
 		if(!$file instanceof FileUpload)
 		{

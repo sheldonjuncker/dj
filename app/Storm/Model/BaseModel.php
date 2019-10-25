@@ -56,4 +56,10 @@ abstract class BaseModel implements Model
 		}
 		return $model;
 	}
+
+	public function getBaseName(): string
+	{
+		$reflectionClass = new \ReflectionClass($this);
+		return str_replace('Model', '', $reflectionClass->getShortName());
+	}
 }

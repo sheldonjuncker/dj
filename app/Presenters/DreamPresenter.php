@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Gui\ActionItem;
 use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\DateInput;
 use App\Gui\Form\Element\HiddenInput;
@@ -29,6 +30,7 @@ final class DreamPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
+		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addBreadcrumb(new Breadcrumb('Overview', '', true));
 
 		$dreamQuery = new DreamQuery($this->database);
@@ -56,6 +58,10 @@ final class DreamPresenter extends BasePresenter
 
 	public function renderShow(string $id)
 	{
+		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
+		$this->addActionItem(new ActionItem('Edit', '/dream/edit/' . $id, 'secondary'));
+		$this->addBreadcrumb(new Breadcrumb('View', '', true));
+
 		$dreamQuery = new DreamQuery($this->database);
 		$dream = $dreamQuery->id($id)->findOne();
 		$this->template->add('dream', $dream);
@@ -63,6 +69,10 @@ final class DreamPresenter extends BasePresenter
 
 	public function renderEdit(string $id)
 	{
+		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
+		$this->addActionItem(new ActionItem('Cancel', '/dream/show/' . $id, 'secondary'));
+
+		$this->addBreadcrumb(new Breadcrumb('Edit', '', true));
 		$dream = $this->getDream($id);
 		$this->template->add('dream', $dream);
 		$this->template->add('sorcerer', $this->getSorcerer($dream, 'edit'));
@@ -70,6 +80,7 @@ final class DreamPresenter extends BasePresenter
 
 	public function renderNew()
 	{
+		$this->addBreadcrumb(new Breadcrumb('New', '', true));
 		$this->template->add('sorcerer', $this->getSorcerer(new DreamModel(), 'create'));
 	}
 

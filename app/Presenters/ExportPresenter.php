@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\DateInput;
 use App\Gui\Form\Element\DropDownList;
 use App\Gui\Form\Element\WithLabel;
@@ -21,10 +22,14 @@ class ExportPresenter extends BasePresenter
 	{
 		parent::__construct();
 		$this->database = $database;
+
+		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
 	}
 
 	public function renderDefault()
 	{
+		$this->addBreadcrumb(new Breadcrumb('Export', '', true));
+
 		$formModel = new ExportFormModel();
 		$formModel->format = 'json';
 		$formModel->start_date = new DateTime();
@@ -60,8 +65,9 @@ class ExportPresenter extends BasePresenter
 	 */
 	public function renderExecute()
 	{
-		$post = $this->getHttpRequest()->getPost('ExportForm');
-		$format = $post['format'] ?: 'json';
+		$formModel = new ExportFormModel($this->getHttpRequest());
+		$format = $formModel->format;
+
 		if($format == 'html')
 		{
 			$this->exportToHtml();

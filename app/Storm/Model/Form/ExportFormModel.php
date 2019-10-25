@@ -5,10 +5,9 @@ namespace App\Storm\Form;
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\DateFormatter;
-use App\Storm\Model\BaseModel;
 use App\Storm\Model\Model;
 
-class ExportFormModel extends BaseModel implements Model
+class ExportFormModel extends FormModel implements Model
 {
 	public $format;
 	public $start_date;
