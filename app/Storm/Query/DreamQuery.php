@@ -13,6 +13,7 @@ use Nette\Database\Table\Selection;
 class DreamQuery extends SqlQuery
 {
 	protected $scopeId;
+	protected $scopeSearchText;
 
 	/** @var array $orderBy An array of order by conditions */
 	protected $orderBy = [];
@@ -26,6 +27,12 @@ class DreamQuery extends SqlQuery
 	{
 		$uuidFormatter = new UuidDataFormatter();
 		$this->scopeId = $uuidFormatter->formatToDataSource($id);
+		return $this;
+	}
+
+	public function search(string $searchText): self
+	{
+		$this->scopeSearchText = $searchText;
 		return $this;
 	}
 
@@ -58,7 +65,13 @@ class DreamQuery extends SqlQuery
 
 		if($this->scopeId !== NULL)
 		{
-			$dreams->where('id', $this->scopeId);
+			$dreams->where('id = ?', $this->scopeId);
+		}
+
+		if($this->scopeSearchText)
+		{
+			$searchText = "%" . $this->scopeSearchText . "%";
+			$dreams->where('title LIKE ? OR description LIKE ?', $searchText, $searchText);
 		}
 
 		return $dreams;

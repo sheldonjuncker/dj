@@ -1,0 +1,38 @@
+{layout '../@layout.latte'}
+{block content}
+	<div class="container">
+		<br>
+		<div class="row content-list-head">
+			<div class="col-auto">
+				<h3>Search Results</h3>
+			</div>
+		</div>
+		<hr>
+
+		<ol class="list-group list-group-activity">
+			{foreach $dreams as $dream}
+				{if !$dream}
+					<hr />
+					{continueIf true}
+				{/if}
+				<li class="list-group-item">
+					<div class="media align-items-center">
+						<ul class="avatars">
+							<li>
+								<div class="avatar bg-primary">
+									<i class="material-icons">single_bed</i>
+								</div>
+							</li>
+						</ul>
+						<div class="media-body">
+							<div>
+								<a href="/dream/show/{$dream->getId()}" class="A-filter-by-text">{$dream->getTitle()|truncate:64}</a>
+							</div>
+							<span class="text-small">{$dream->getFormattedDate()}</span>
+						</div>
+					</div>
+				</li>
+			{/foreach}
+		</ol>
+	</div>
+{/block}
