@@ -6,19 +6,7 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import wordnet
-
-text="""Dying die My brother Wesley and I had purchased tickets to an all-inclusive water park and resort where we were to spend a weekend relaxing, engaging in various water activities such as swimming and canoeing, and surfing. We got to the hotel room which was basically the size of a house and found that our parents were also there. We hadn't initially planned on them being there but we were happy to have them. There were only two beds in the room though and we had to ask the staff for an extra bed so that everyone could have their own.
-
-That night my brother and I were going to head out to the ocean but I was slightly scared that I would intentionally swim out too far into the water and be drowned by the waves. We may have gone to the water front but didn't go in too far.
-
-The next morning my brother and I decided to go canoeing and so rented a canoe and took it out into a rocky section of the ocean where there was enough current from a river flowing into the sea to create rapids. We went straight through the rapids and must have been going between 40 and 50 miles per hour. In front of us was an even more difficult section and we had to make the decision to either take the easier route or risk something dangerous. We hastily decided to take the dangerous route. There wasn't time to think clearly about it. As we did so, we noticed that there were several groups of kids swimming in the same area that we were canoeing. Each group had an instructor with them and as we whizzed past it was all we could do to avoid hitting the children.
-
-We made it safely through, although we wondered if we hadn't accidentally hit someone without our knowing as we were travelling so fast. Later that afternoon, we took a slower trip with the canoe up further north on a lake. It was at that time that we heard news that a kid swimming had been hit by a canoe and killed. We were sure that it was our fault and spent quite some time trying to figure out the details. Eventually we found out that the kid had died in a completely different part of the resort and it couldn't have been our fault.
-
-While we were at the lake, we found a house that was half-submerged. We went into it to explore and found a stair case that went down to the basement which was completely under water. As we stared into the basement, a grey cat walked around the corner at the bottom of the stairs, climbed the stairs and came over to me. I picked it up as I really wanted a pet cat but saw that it was rather old and ugly. We took it back to the hotel to care for it but I knew I wouldn't keep it.
-
-At another point in the dream, probably earlier, I was in one of the buildings of the resort where they had some exhibits and information stands. My dad was there and we were speaking with a man with dark curly hair and long beard who was telling us about each exhibit which detailed some historical article about the region. I don't remember what all we discussed.
-"""
+import mysql.connector
 
 # Converts treebank to wordnet format for parts of speech
 def get_wordnet_pos(treebank_tag):
@@ -67,31 +55,81 @@ def process_sentence(s, stop_words, lem, stem):
 
     return lemmatized_words
 
-def takeSecond(elem):
-    return elem[1]
+def save_word_frequency(dream_id, word, frequency):
+    word_cursor = cnx.cursor()
+    word_query = (" select id from word where word = %s ")
+    print(word_query, (word))
+    word_cursor.execute(word_query, (word,))
+    word_result = word_cursor.fetchone()
+    word_cursor.close()
+    # Word exists, use id
+    if word_result:
+        word_id = word_result[0]
+    # Word does not exist, create and use id
+    else:
+        word_insert = ("""
+            INSERT INTO word(word) VALUES( %s )
+        """)
+        insert_cursor = cnx.cursor()
+        insert_cursor.execute(word_insert, (word,))
+        word_id = insert_cursor.getlastrowid()
+        insert_cursor.close()
 
-# Finally parsed tokens after lemmatization
-tokens = []
+    if word_id:
+        word_freq_insert = ("""
+            INSERT INTO dream_word_freq(dream_id, word_id, frequency) VALUES(uuid_to_bin( %s ), %s, %s)
+        """)
+        freq_insert_cursor = cnx.cursor()
+        freq_insert_cursor.execute(word_freq_insert, (dream_id, word_id, frequency))
+        freq_insert_cursor.close()
+    else:
+        print('Did not find word id for %s.', (word))
+
+
+def process_dream(dream_id, text, stop_words, lem, stem):
+    dream_tokens = []
+    # Split into sentences
+    sentences = sent_tokenize(text)
+    for s in sentences:
+        dream_tokens.extend(process_sentence(s, stop_words, lem, stem))
+
+    # Get sorted frequency of words
+    word_freq = []
+    for item in FreqDist(dream_tokens).items():
+        save_word_frequency(dream_id, item[0], item[1] / len(dream_tokens))
+
+#
+# Set Up
+#
 
 # Stop words
 stop_words = stopwords.words("english")
 stop_words.extend([",", ".", "!", "?", ";", ":", "n't"])
 
 # Lemmatizer
-lem = WordNetLemmatizer()
+# lem = WordNetLemmatizer()
+lem = None
 
 # Stemmer
 stem = PorterStemmer()
 
-# Split into sentences
-sentences = sent_tokenize(text)
-for s in sentences:
-    tokens.extend(process_sentence(s, stop_words, None, stem))
+# Connect to MySQL
+cnx = mysql.connector.connect(user='root', password='password', database='freud')
 
-# Get sorted frequency of words
-fdist = FreqDist(tokens)
+# Get and process dreams
+cursor = cnx.cursor(buffered=True)
+dream_query = ("""
+    select 
+        bin_to_uuid(id) as 'id',
+        concat(title, '. ', description) as 'text'
+    from
+        dj.dream
+    ;
+""")
+cursor.execute(dream_query)
+for (id, text) in cursor:
+    process_dream(id, text, stop_words, lem, stem)
 
-freq = []
-for item in fdist.items():
-    freq.append((item[0], item[1] / len(tokens)))
-freq = sorted(freq, key=takeSecond)
+cursor.close()
+cnx.commit()
+cnx.close()
