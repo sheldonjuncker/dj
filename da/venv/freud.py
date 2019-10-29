@@ -56,9 +56,9 @@ def process_sentence(s, stop_words, lem, stem):
     return lemmatized_words
 
 def save_word_frequency(dream_id, word, frequency):
+    print(word + "/" + str(frequency))
     word_cursor = cnx.cursor()
     word_query = (" select id from word where word = %s ")
-    print(word_query, (word))
     word_cursor.execute(word_query, (word,))
     word_result = word_cursor.fetchone()
     word_cursor.close()
@@ -87,6 +87,7 @@ def save_word_frequency(dream_id, word, frequency):
 
 
 def process_dream(dream_id, text, stop_words, lem, stem):
+    print("Processing dream " + dream_id)
     dream_tokens = []
     # Split into sentences
     sentences = sent_tokenize(text)
@@ -94,9 +95,9 @@ def process_dream(dream_id, text, stop_words, lem, stem):
         dream_tokens.extend(process_sentence(s, stop_words, lem, stem))
 
     # Get sorted frequency of words
-    word_freq = []
     for item in FreqDist(dream_tokens).items():
         save_word_frequency(dream_id, item[0], item[1] / len(dream_tokens))
+    print("Finished.\n")
 
 #
 # Set Up
@@ -124,8 +125,20 @@ dream_query = ("""
         concat(title, '. ', description) as 'text'
     from
         dj.dream
+    where
+        not exists(
+            select
+                1
+            from
+                freud.dream_word_freq dwf
+            where
+                dwf.dream_id = dream.id
+            limit
+                1
+        )
     ;
 """)
+
 cursor.execute(dream_query)
 for (id, text) in cursor:
     process_dream(id, text, stop_words, lem, stem)
