@@ -7,10 +7,7 @@ use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
 use App\Storm\Form\DreamSearchModel;
-use App\Storm\Model\BaseModel;
-use App\Storm\Model\DreamModel;
 use App\Storm\Query\DreamQuery;
-use Nette\Application\Responses\TextResponse;
 use Nette\Database\Context;
 use App\Gui\Breadcrumb;
 

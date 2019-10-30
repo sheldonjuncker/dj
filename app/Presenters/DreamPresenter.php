@@ -6,13 +6,18 @@ use App\Gui\ActionItem;
 use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\DateInput;
 use App\Gui\Form\Element\HiddenInput;
+use App\Gui\Form\Element\LatteTemplate;
+use App\Gui\Form\Element\Tag;
 use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
 use App\Storm\Model\DreamModel;
 use App\Storm\Query\DreamQuery;
+use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
+use Latte\Engine;
+use Latte\Runtime\Template;
 use Nette;
 
 final class DreamPresenter extends BasePresenter
@@ -134,6 +139,14 @@ final class DreamPresenter extends BasePresenter
 				'rows' => 6
 			]))
 		);
+
+		$templateFile = $this->context->parameters['templatePath'] . '/components/dream_types_edit.latte';
+
+		$dreamTypeQuery = new DreamTypeQuery($this->database);
+		$sorcerer->addElement(new WithLabel('Dream Type', new LatteTemplate($templateFile, [
+			'dreamTypes' => $dreamTypeQuery->find()
+		])));
+
 		$sorcerer->addSubmit();
 		return $sorcerer;
 	}
