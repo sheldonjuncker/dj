@@ -46,4 +46,9 @@ class DreamTypeModel extends BaseModel implements Model
 	{
 		$this->default = $default;
 	}
+
+	public function getFontIcon(): string
+	{
+		return 'repeat';
+	}
 }
