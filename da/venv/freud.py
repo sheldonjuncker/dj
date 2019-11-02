@@ -8,6 +8,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import wordnet
 import mysql.connector
 
+# Freud takes the dreams and analyzes them
 class Freud:
     cnx = None
     stop_words = []
@@ -68,7 +69,7 @@ class Freud:
             return wordnet.NOUN
 
     # Processes a sentence into lemmatized tokens
-    def __process_sentence(self, s):
+    def process_sentence(self, s):
         # Break into words
         words = word_tokenize(s)
 
@@ -148,13 +149,9 @@ class Freud:
         # Split into sentences
         sentences = sent_tokenize(text)
         for s in sentences:
-            dream_tokens.extend(self.__process_sentence(s))
+            dream_tokens.extend(self.process_sentence(s))
 
         # Get sorted frequency of words
         for item in FreqDist(dream_tokens).items():
             self.__save_word_frequency(dream_id, item[0], item[1] / len(dream_tokens))
         print("Finished.\n")
-
-
-f = Freud()
-f.process()
