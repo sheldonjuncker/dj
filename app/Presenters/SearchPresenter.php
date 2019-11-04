@@ -32,10 +32,11 @@ class SearchPresenter extends BasePresenter
 
 	public function renderResults()
 	{
-		$this->addBreadcrumb(new Breadcrumb('Search', '/search'));
-		$this->addBreadcrumb(new Breadcrumb('Search Results'));
-
 		$searchModel = new DreamSearchModel($this->getHttpRequest());
+
+		$this->addBreadcrumb(new Breadcrumb('Search', '/search'));
+		$this->addBreadcrumb(new Breadcrumb('Results for "' . $searchModel->search . '"'));
+
 		# $dreamQuery = new DreamQuery($this->database);
 		# $dreamQuery->search($searchModel->search);
 		$this->template->add('dreams', $searchModel->search($this->database));

@@ -1,5 +1,4 @@
 import mysql.connector
-import sys
 from freud import Freud
 
 # Jung searches for dreams and gives you answers
@@ -52,11 +51,3 @@ ORDER BY
         for result in cursor:
             print(result[0], result[1])
 
-if len(sys.argv) > 1:
-    j = Jung()
-    j.search(sys.argv[1])
-    exit(0)
-else:
-    f = Freud()
-    f.process()
-    exit(0)

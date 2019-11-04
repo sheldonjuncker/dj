@@ -33,7 +33,7 @@ class DreamSearchModel extends FormModel
 		$result = NULL;
 
 		$search = escapeshellarg($this->search);
-		exec("C:/xampp/htdocs/da/venv/Scripts/python.exe C:/xampp/htdocs/da/venv/jung.py {$search}", $dreamIds, $result);
+		exec("C:/xampp/htdocs/da/venv/Scripts/python.exe C:/xampp/htdocs/da/venv/search.py {$search}", $dreamIds, $result);
 
 		$dreams = [];
 		if($result == 0)
@@ -43,12 +43,10 @@ class DreamSearchModel extends FormModel
 			{
 				$parts = explode(" ", $dreamId);
 				$id = $parts[0];
-				$score = $parts[1];
 
 				$dream = $dreamQuery->id($id)->findOne();
 				if($dream)
 				{
-					# print "<b>{$dream->getTitle()}/ {$score}</b><br>";
 					$dreams[] = $dream;
 				}
 			}
