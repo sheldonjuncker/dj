@@ -1,4 +1,5 @@
 import mysql.connector
+import sys
 from freud import Freud
 
 # Jung searches for dreams and gives you answers
@@ -45,13 +46,17 @@ ORDER BY
     total_frequency DESC
         """
 
-        print(sql)
-
         cnx = mysql.connector.connect(user='root', password='password', database='freud')
         cursor = cnx.cursor()
         cursor.execute(sql, params)
         for result in cursor:
-            print(result)
+            print(result[0], result[1])
 
-j = Jung()
-j.search("grandpa paul")
+if len(sys.argv) > 1:
+    j = Jung()
+    j.search(sys.argv[1])
+    exit(0)
+else:
+    f = Freud()
+    f.process()
+    exit(0)

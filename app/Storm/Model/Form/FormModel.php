@@ -26,7 +26,7 @@ abstract class FormModel extends BaseModel implements Model
 	public function setFieldsFromRequest()
 	{
 		$method = $this->request->getMethod();
-		$dataArray = $method == 'get' ? $this->request->getQuery() : $this->request->getPost();
+		$dataArray = $method == 'GET' ? $this->request->getQuery() : $this->request->getPost();
 
 		//Everything is prefixed with the model class name
 		$dataArray = $dataArray[$this->getBaseName()] ?? [];

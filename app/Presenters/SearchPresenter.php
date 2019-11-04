@@ -32,18 +32,19 @@ class SearchPresenter extends BasePresenter
 
 	public function renderResults()
 	{
+		$this->addBreadcrumb(new Breadcrumb('Search', '/search'));
 		$this->addBreadcrumb(new Breadcrumb('Search Results'));
 
 		$searchModel = new DreamSearchModel($this->getHttpRequest());
-		$dreamQuery = new DreamQuery($this->database);
-		$dreamQuery->search($searchModel->search);
-		$this->template->add('dreams', $dreamQuery->find());
+		# $dreamQuery = new DreamQuery($this->database);
+		# $dreamQuery->search($searchModel->search);
+		$this->template->add('dreams', $searchModel->search($this->database));
 	}
 
 	public function getSorcerer(): Sorcerer
 	{
 		$searchModel = new DreamSearchModel();
-		$sorcerer = new Sorcerer($searchModel, '/search/results', 'post');
+		$sorcerer = new Sorcerer($searchModel, '/search/results', 'get');
 		$sorcerer->addElement(
 			new WithLabel('Search Text', new TextInput($searchModel, 'search'))
 		);
