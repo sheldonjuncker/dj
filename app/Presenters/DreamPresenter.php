@@ -65,6 +65,8 @@ final class DreamPresenter extends BasePresenter
 	{
 		$this->addActionItem(new ActionItem('New', '/dream/new', 'primary'));
 		$this->addActionItem(new ActionItem('Edit', '/dream/edit/' . $id, 'secondary'));
+		$this->addActionItem(new ActionItem('Delete', '/dream/delete/' . $id, 'danger'));
+
 		$this->addBreadcrumb(new Breadcrumb('View', '', true));
 
 		$dreamQuery = new DreamQuery($this->database);
@@ -81,6 +83,14 @@ final class DreamPresenter extends BasePresenter
 		$dream = $this->getDream($id);
 		$this->template->add('dream', $dream);
 		$this->template->add('sorcerer', $this->getSorcerer($dream, 'edit'));
+	}
+
+	public function renderDelete(string $id)
+	{
+		$dream = $this->getDream($id);
+		$sqlSaver = new SqlSaver($this->database);
+		$sqlSaver->delete($dream);
+		$this->redirect('default');
 	}
 
 	public function renderNew()

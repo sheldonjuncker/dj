@@ -75,6 +75,23 @@ class SqlSaver extends Saver
 		}
 	}
 
+	public function delete(Model $model)
+	{
+		$tableName = $this->getTableName($model);
+		$fields = $model->getDataDefinition();
+		$primaryKeyFields = $this->getPrimaryKey();
+
+		$delete = $this->connection->table($tableName);
+		foreach($primaryKeyFields as $primaryKeyField)
+		{
+			$delete->where($primaryKeyField, $fields->getField($primaryKeyField)->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE));
+		}
+		if(!$delete->delete())
+		{
+			throw new DeleteFailedException("Failed to delete " . $tableName . "(" . implode(", ", $primaryKeyFields) . ").");
+		}
+	}
+
 	public function update(Model $model): int
 	{
 		$tableName = $this->getTableName($model);

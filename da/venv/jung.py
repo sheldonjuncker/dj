@@ -10,25 +10,26 @@ class Jung:
         for token in tokens:
             search_terms.append(token[1])
         sql = """
-            SELECT
-                bin_to_uuid(dream_id)
-            FROM
-                freud.dream_word_freq dwf
-            INNER JOIN
-                freud.word ON(
-                    word.id = dwf.word_id
-                )
-            WHERE
-                0
-                {conditions}
+            (
+                SELECT
+                    bin_to_uuid(dream_id) AS 'dream_id'
+                FROM
+                    freud.dream_word_freq dwf
+                INNER JOIN
+                    freud.word ON(
+                        word.id = dwf.word_id
+                    )
+                WHERE
+                    word.search LIKE %s
+            )
         """
-        conditions = []
-        params = []
-        for search_term in search_terms:
-            conditions.append("OR word.search LIKE %s")
-            params.append(search_term + "%")
+        first_term = search_terms.pop()
+        params = [first_term + "%"]
 
-        sql = sql.replace("{conditions}", "\n".join(conditions))
+
+        for search_term in search_terms:
+            sql += "\nunion\n" + sql
+            params.append(search_term + "%")
 
         print(sql)
 
@@ -39,4 +40,4 @@ class Jung:
             print(result)
 
 j = Jung()
-j.search("schizophrenia")
+j.search("grandpa paul")

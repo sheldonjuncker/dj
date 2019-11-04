@@ -22,4 +22,12 @@ abstract class Saver
 	 * @throws SaveFailedException
 	 */
 	abstract public function save(Model $model);
+
+	/**
+	 * Does the opposite of the save thing.
+	 *
+	 * @param Model $model
+	 * @throws DeleteFailedException
+	 */
+	abstract public function delete(Model $model);
 }
