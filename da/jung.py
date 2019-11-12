@@ -1,6 +1,7 @@
 import mysql.connector
 from freud import Freud
 
+
 # Jung searches for dreams and gives you answers
 class Jung:
     def search(self, terms):
@@ -48,6 +49,7 @@ ORDER BY
         cnx = mysql.connector.connect(user='root', password='password', database='freud')
         cursor = cnx.cursor()
         cursor.execute(sql, params)
+        results = []
         for result in cursor:
-            print(result[0], result[1])
-
+            results.append((result[0], result[1]))
+        return results

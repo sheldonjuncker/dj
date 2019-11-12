@@ -1,4 +1,1 @@
-.idea/
-venv/Include
-venv/Lib
-venv/Scripts
+__pycache__/

@@ -8,6 +8,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import wordnet
 import mysql.connector
 
+
 # Freud takes the dreams and analyzes them
 class Freud:
     cnx = None
@@ -136,7 +137,6 @@ class Freud:
             freq_insert_cursor.close()
         else:
             print('Did not find word id for %s.', (lemmatized_word))
-
 
     def __preprocess_dream_text(self, text):
         # Convert weird unicode things to spaces
