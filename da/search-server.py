@@ -1,19 +1,33 @@
 from jung import Jung
 import asyncio
+import json
+
 
 async def handle_request(reader, writer):
-    data = await reader.read(100)
-    message = data.decode()
-    addr = writer.get_extra_info('peername')
+    data = await reader.read(256)
 
-    print(f"Received {message!r} from {addr!r}")
+    if not data:
+        response = {
+            'code': 400,
+            'error': 'no data sent',
+            'data': None
+        }
+    else:
+        search = data.decode()
+        print("searching for: " + search)
+        j = Jung()
+        response = {
+            'code': 200,
+            'error': None,
+            'data': j.search(search)
+        }
 
-    print(f"Send: {message!r}")
-    writer.write(data)
+    json_response = json.dumps(response);
+    print('sending: ' + json_response)
+    writer.write(json_response.encode())
     await writer.drain()
-
-    print("Close the connection")
     writer.close()
+
 
 async def main():
     server = await asyncio.start_server(
@@ -25,10 +39,4 @@ async def main():
     async with server:
         await server.serve_forever()
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
-
-#j = Jung()
-#results = j.search(data)
-#conn.sendall(data)
-
+asyncio.run(main())
