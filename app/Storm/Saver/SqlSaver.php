@@ -7,8 +7,10 @@ use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
 use Nette\Database\Context;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Rhumsaa\Uuid\Uuid;
+use Tracy\Debugger;
 
 /**
  * Class SqlSaver
@@ -68,13 +70,35 @@ class SqlSaver extends Saver
 
 	public function save(Model $model)
 	{
+		print "<h3>Saving:</h3>";
+		Debugger::dump($model);
+
 		if($this->isNew($model))
 		{
-			$this->insert($model);
+			$result = $this->insert($model);
+			if($result instanceof ActiveRow)
+			{
+				foreach($result as $dataField => $value)
+				{
+					$field = $model->getDataDefinition()->getField($dataField);
+					if($field)
+					{
+						$field->setValue($value, DataFieldDefinition::FORMAT_TYPE_FROM_DATA_SOURCE);
+					}
+				}
+			}
+			else if(!$result)
+			{
+				throw new SaveFailedException('Failed to create DB record for model ' . $model->getBaseName() . '.');
+			}
 		}
 		else
 		{
-			$this->update($model);
+			$result = $this->update($model);
+			if(!$result && false)
+			{
+				throw new SaveFailedException('Failed to update DB record for model ' . $model->getBaseName() . '.');
+			}
 		}
 	}
 

@@ -19,6 +19,7 @@ use App\Storm\Query\DreamQuery;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette;
+use Tracy\Debugger;
 
 final class DreamPresenter extends BasePresenter
 {
@@ -126,7 +127,7 @@ final class DreamPresenter extends BasePresenter
 				$dreamSaver->save($dreamToTypeModel);
 			}
 		}
-
+		die();
 		$this->redirect('show', [
 			'id' => $dream->getId()
 		]);
