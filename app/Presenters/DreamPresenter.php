@@ -13,11 +13,11 @@ use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
 use App\Storm\Model\DreamModel;
+use App\Storm\Model\DreamToDreamTypeModel;
+use App\Storm\Model\DreamTypeModel;
 use App\Storm\Query\DreamQuery;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
-use Latte\Engine;
-use Latte\Runtime\Template;
 use Nette;
 
 final class DreamPresenter extends BasePresenter
@@ -104,6 +104,7 @@ final class DreamPresenter extends BasePresenter
 		$dream = $this->getDream($id, true);
 
 		$dreamPost = $this->getHttpRequest()->getPost('Dream') ?: [];
+		$dreamTypePost = $this->getHttpRequest()->getPost('DreamType');
 
 		$dream->setTitle($dreamPost['title']);
 		$dreamtAt = $dreamPost['dreamt_at'] ?? 'now';
@@ -114,6 +115,17 @@ final class DreamPresenter extends BasePresenter
 
 		$dreamSaver = new SqlSaver($this->database);
 		$dreamSaver->save($dream);
+
+		if($dreamTypePost)
+		{
+			foreach($dreamTypePost as $dreamType => $checked)
+			{
+				$dreamToTypeModel = new DreamToDreamTypeModel();
+				$dreamToTypeModel->setDreamId($dream->getId());
+				$dreamToTypeModel->setTypeId($dreamType);
+				$dreamSaver->save($dreamToTypeModel);
+			}
+		}
 
 		$this->redirect('show', [
 			'id' => $dream->getId()
@@ -153,6 +165,7 @@ final class DreamPresenter extends BasePresenter
 		$templateFile = $this->context->parameters['templatePath'] . '/components/dream_types_edit.latte';
 
 		$dreamTypeQuery = new DreamTypeQuery($this->database);
+		$dreamTypeQuery->excludeNormal();
 		$sorcerer->addElement(new WithLabel('Dream Type', new LatteTemplate($templateFile, [
 			'dreamTypes' => $dreamTypeQuery->find()
 		])));

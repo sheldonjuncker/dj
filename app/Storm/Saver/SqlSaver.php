@@ -7,6 +7,7 @@ use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
 use Nette\Database\Context;
+use Nette\Database\Table\Selection;
 use Rhumsaa\Uuid\Uuid;
 
 /**
@@ -34,18 +35,6 @@ class SqlSaver extends Saver
 	}
 
 	/**
-	 * In order to save any Model, we need to know it's PK.
-	 * This defaults to ['id'] for normal models, and will need
-	 * to be overridden for custom ones.
-	 *
-	 * @return array
-	 */
-	public function getPrimaryKey(): array
-	{
-		return ['id'];
-	}
-
-	/**
 	 * Once we have the PK and table name, we can pretty easily
 	 * perform an insert statement.
 	 *
@@ -58,8 +47,22 @@ class SqlSaver extends Saver
 	{
 		$rc = new \ReflectionClass($model);
 		$shortClassName = $rc->getShortName();
-		$tableName = str_replace('Model', '', $shortClassName);
-		$tableName = strtolower($tableName);
+		$baseName = str_replace('Model', '', $shortClassName);
+
+		//Add an underscore before all capitals but the first
+		$baseCharacters = str_split($baseName);
+		$tableName = '';
+		for($i=0; $i<count($baseCharacters) ; $i++)
+		{
+			$c = $baseCharacters[$i];
+			if(ctype_upper($c) && $i !== 0)
+			{
+				$tableName .= '_';
+			}
+
+			$tableName .= strtolower($c);
+		}
+
 		return $tableName;
 	}
 
@@ -79,9 +82,10 @@ class SqlSaver extends Saver
 	{
 		$tableName = $this->getTableName($model);
 		$fields = $model->getDataDefinition();
-		$primaryKeyFields = $this->getPrimaryKey();
 
 		$delete = $this->connection->table($tableName);
+		$primaryKeyFields = $this->getPrimaryKeyFields($delete);
+
 		foreach($primaryKeyFields as $primaryKeyField)
 		{
 			$delete->where($primaryKeyField, $fields->getField($primaryKeyField)->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE));
@@ -95,18 +99,18 @@ class SqlSaver extends Saver
 	public function update(Model $model): int
 	{
 		$tableName = $this->getTableName($model);
+		$update = $this->connection->table($tableName);
+
 		$fields = $model->getDataDefinition();
 
 		$updateFields = [];
-		$primaryKeyFields = $this->getPrimaryKey();
+		$primaryKeyFields = $this->getPrimaryKeyFields($update);
 		foreach($fields->getFields() as $field)
 		{
 			$updateFields[$field->getName()] = $field->getValue(DataFieldDefinition::FORMAT_TYPE_TO_DATA_SOURCE);
 		}
 
 		$updateFields = array_diff_key($updateFields, array_flip($primaryKeyFields));
-
-		$update = $this->connection->table($tableName);
 
 		foreach($primaryKeyFields as $primaryKeyField)
 		{
@@ -120,7 +124,9 @@ class SqlSaver extends Saver
 		$tableName = $this->getTableName($model);
 		$fields = $model->getDataDefinition();
 
-		$primaryKeyFields = $this->getPrimaryKey();
+
+		$table = $this->connection->table($tableName);
+		$primaryKeyFields = $this->getPrimaryKeyFields($table);
 
 
 		//Might need to set a PK if it's a UUID and empty
@@ -148,7 +154,8 @@ class SqlSaver extends Saver
 	 */
 	protected function isNew(Model $model): bool
 	{
-		$primaryKeyFields = $this->getPrimaryKey();
+		$table = $this->connection->table($this->getTableName($model));
+		$primaryKeyFields = $this->getPrimaryKeyFields($table);
 		$fields = $model->getDataDefinition();
 
 		foreach($primaryKeyFields as $primaryKeyField)
@@ -160,5 +167,18 @@ class SqlSaver extends Saver
 			}
 		}
 		return true;
+	}
+
+	public function getPrimaryKeyFields(Selection $table): array
+	{
+		$primaryKey = $table->getPrimary();
+		if(is_string($primaryKey))
+		{
+			return [$primaryKey];
+		}
+		else
+		{
+			return $primaryKey;
+		}
 	}
 }
