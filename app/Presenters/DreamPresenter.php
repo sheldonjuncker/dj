@@ -15,7 +15,9 @@ use App\Gui\Form\Sorcerer;
 use App\Storm\Model\DreamModel;
 use App\Storm\Model\DreamToDreamTypeModel;
 use App\Storm\Model\DreamTypeModel;
+use App\Storm\Model\Info\InfoStore;
 use App\Storm\Query\DreamQuery;
+use App\Storm\Query\DreamToDreamTypeQuery;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette;
@@ -73,6 +75,33 @@ final class DreamPresenter extends BasePresenter
 		$dreamQuery = new DreamQuery($this->database);
 		$dream = $dreamQuery->id($id)->findOne();
 		$this->template->add('dream', $dream);
+
+		$templateFile = $this->context->parameters['templatePath'] . '/components/dream_types_edit.latte';
+		$database = $this->database;
+
+		$dreamTypeQuery = new DreamTypeQuery($this->database);
+		$dreamTypeQuery->excludeNormal();
+
+		$sorcerer = new Sorcerer($dream, '', '');
+		$dreamTypesElement = new LatteTemplate($templateFile, [
+			'dreamTypes' => $dreamTypeQuery->find(),
+			'checked' => function (DreamTypeModel $type) use($dream, $database){
+				$dreamToDreamTypeQuery = new DreamToDreamTypeQuery($database);
+				$dreamToDreamTypeQuery->dream($dream->getId());
+				$dreamToDreamTypeQuery->type($type->getId());
+				if($dreamToDreamTypeQuery->findOne())
+				{
+					return 'checked="checked"';
+				}
+				else
+				{
+					return '';
+				}
+			},
+			'disabled' => 'disabled="disabled"'
+		]);
+		$sorcerer->addElement(new WithLabel('Dream Type', $dreamTypesElement));
+		$this->template->add('dreamTypesElement', $sorcerer);
 	}
 
 	public function renderEdit(string $id)
@@ -117,6 +146,15 @@ final class DreamPresenter extends BasePresenter
 		$dreamSaver = new SqlSaver($this->database);
 		$dreamSaver->save($dream);
 
+		//Remove all dream type associations so that we can readd
+		$dreamToDreamTypeQuery = new DreamToDreamTypeQuery($this->database);
+		$dreamToDreamTypeQuery->dream($dream->getId());
+		foreach($dreamToDreamTypeQuery->find() as $dreamToDreamType)
+		{
+			$dreamSaver->delete($dreamToDreamType);
+		}
+
+		//Add new dream type associations
 		if($dreamTypePost)
 		{
 			foreach($dreamTypePost as $dreamType => $checked)
@@ -127,7 +165,7 @@ final class DreamPresenter extends BasePresenter
 				$dreamSaver->save($dreamToTypeModel);
 			}
 		}
-		die();
+
 		$this->redirect('show', [
 			'id' => $dream->getId()
 		]);
@@ -165,10 +203,32 @@ final class DreamPresenter extends BasePresenter
 
 		$templateFile = $this->context->parameters['templatePath'] . '/components/dream_types_edit.latte';
 
+
 		$dreamTypeQuery = new DreamTypeQuery($this->database);
 		$dreamTypeQuery->excludeNormal();
+
+		$database = $this->database;
 		$sorcerer->addElement(new WithLabel('Dream Type', new LatteTemplate($templateFile, [
-			'dreamTypes' => $dreamTypeQuery->find()
+			'dreamTypes' => $dreamTypeQuery->find(),
+			'checked' => function (DreamTypeModel $type) use($model, $database){
+				if(InfoStore::getInstance()->isNew($model))
+				{
+					return '';
+				}
+
+				$dreamToDreamTypeQuery = new DreamToDreamTypeQuery($database);
+				$dreamToDreamTypeQuery->dream($model->getId());
+				$dreamToDreamTypeQuery->type($type->getId());
+				if($dreamToDreamTypeQuery->findOne())
+				{
+					return 'checked="checked"';
+				}
+				else
+				{
+					return '';
+				}
+			},
+			'disabled' => ''
 		])));
 
 		$sorcerer->addSubmit();

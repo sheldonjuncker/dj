@@ -4,6 +4,7 @@
 namespace App\Storm\Query;
 
 use App\Storm\DataDefinition\DataFieldDefinition;
+use App\Storm\Model\Info\InfoStore;
 use Nette\Database\Context;
 use Nette\Database\ResultSet;
 use App\Storm\Model\Model;
@@ -40,7 +41,7 @@ abstract class SqlQuery extends Query
 		foreach($this->buildQuery() as $result)
 		{
 			$model = $this->getModel();
-			$this->setProperties($model, $result);
+			$this->processResult($model, $result);
 			yield $model;
 		}
 	}
@@ -53,9 +54,16 @@ abstract class SqlQuery extends Query
 	public function findOne(): ?Model
 	{
 		$result = $this->buildQuery()->fetch();
-		$model = $this->getModel();
-		$this->setProperties($model, $result);
-		return $model;
+		if($result)
+		{
+			$model = $this->getModel();
+			$this->processResult($model, $result);
+			return $model;
+		}
+		else
+		{
+			return NULL;
+		}
 	}
 
 	/**
@@ -69,14 +77,23 @@ abstract class SqlQuery extends Query
 		foreach($this->buildQuery() as $result)
 		{
 			$model = $this->getModel();
-			$this->setProperties($model, $result);
+			$this->processResult($model, $result);
 			$models[] = $model;
 		}
 		return $models;
 	}
 
-	protected function setProperties(Model $model, ActiveRow $result)
+	/**
+	 * Sets the properties on the model from the result and sets up model info
+	 * for future use.
+	 *
+	 * @param Model $model
+	 * @param ActiveRow $result
+	 */
+	protected function processResult(Model $model, ActiveRow $result)
 	{
+		InfoStore::getInstance()->setNew($model, false);
+
 		$dataDefinition = $model->getDataDefinition();
 		foreach($result->toArray() as $key => $value)
 		{

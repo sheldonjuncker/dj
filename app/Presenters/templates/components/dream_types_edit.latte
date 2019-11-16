@@ -1,6 +1,6 @@
 	{foreach $dreamTypes as $dreamType}
 			<div class="custom-control custom-switch">
-				<input type="checkbox" class="custom-control-input" id="DreamType_{$dreamType->getId()}" name="DreamType[{$dreamType->getId()}]">
+				<input type="checkbox" class="custom-control-input" id="DreamType_{$dreamType->getId()}" name="DreamType[{$dreamType->getId()}]" {$checked($dreamType)|noescape} {$disabled|noescape}>
 				<label class="custom-control-label" for="DreamType_{$dreamType->getId()}">{$dreamType->getName()}</label>
 			</div>
 	{/foreach}

@@ -14,5 +14,9 @@
 		<div class="row col-lg-12">
 			<p>{$dream->getDescription()|breaklines}</p>
 		</div>
+		<hr>
+		<div class="row col-lg-12">
+			{$dreamTypesElement->render()|noescape}
+		</div>
 	</div>
 {/block}

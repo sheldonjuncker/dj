@@ -5,6 +5,7 @@ namespace App\Storm\Saver;
 
 use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\UuidDataFormatter;
+use App\Storm\Model\Info\InfoStore;
 use App\Storm\Model\Model;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
@@ -70,9 +71,6 @@ class SqlSaver extends Saver
 
 	public function save(Model $model)
 	{
-		print "<h3>Saving:</h3>";
-		Debugger::dump($model);
-
 		if($this->isNew($model))
 		{
 			$result = $this->insert($model);
@@ -178,19 +176,7 @@ class SqlSaver extends Saver
 	 */
 	protected function isNew(Model $model): bool
 	{
-		$table = $this->connection->table($this->getTableName($model));
-		$primaryKeyFields = $this->getPrimaryKeyFields($table);
-		$fields = $model->getDataDefinition();
-
-		foreach($primaryKeyFields as $primaryKeyField)
-		{
-			$field = $fields->getField($primaryKeyField);
-			if($field && ($value = $field->getValue 	(DataFieldDefinition::FORMAT_TYPE_NONE)))
-			{
-				return false;
-			}
-		}
-		return true;
+		return InfoStore::getInstance()->isNew($model);
 	}
 
 	public function getPrimaryKeyFields(Selection $table): array
