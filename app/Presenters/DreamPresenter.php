@@ -7,7 +7,6 @@ use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\DateInput;
 use App\Gui\Form\Element\HiddenInput;
 use App\Gui\Form\Element\LatteTemplate;
-use App\Gui\Form\Element\Tag;
 use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
@@ -21,7 +20,6 @@ use App\Storm\Query\DreamToDreamTypeQuery;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette;
-use Tracy\Debugger;
 
 final class DreamPresenter extends BasePresenter
 {

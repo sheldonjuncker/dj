@@ -27,6 +27,7 @@ class Sorcerer
 {
 	const EDIT = 'edit';
 	const CREATE = 'create';
+	const VIEW = 'view';
 
 	/** @var Model $model */
 	protected $model;
