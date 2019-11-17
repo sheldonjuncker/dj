@@ -11,6 +11,7 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
 	<link href="/assets/css/theme.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="/assets/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 <body>
 <!-- End of Header-->
@@ -44,6 +45,41 @@
 		<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/assets/js/popper.min.js"></script>
 		<script type="text/javascript" src="/assets/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/assets/js/bootstrap-tagsinput.js"></script>
+		<script type="text/javascript" src="/assets/js/typeahead.bundle.js"></script>
+		<script>
+			$(document).ready(function(){
+				var data = ['Flying', 'Death', 'Emotional', 'Exciting'];
+				$.ajax('/dreamcategory?type=json', {
+					success: function(data){
+						var categoryNames = new Bloodhound({
+							datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+							queryTokenizer: Bloodhound.tokenizers.whitespace,
+							local: $.map(data, function (category) {
+								return {
+									name: category
+								};
+							})
+						});
+						categoryNames.initialize();
+
+						$('#categories').tagsinput({
+							typeaheadjs: {
+								name: 'categoryNames',
+								displayKey: 'name',
+								valueKey: 'name',
+								source: categoryNames.ttAdapter()
+							},
+							'tagClass': 'badge badge-primary',
+							'freeInput': false
+						});
+					},
+					error: function(){
+						alert('fail');
+					}
+				});
+			});
+		</script>
 
 		<!-- Optional Vendor Scripts (Remove the plugin script here and comment initializer script out of index.js if site does not use that feature) -->
 

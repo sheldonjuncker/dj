@@ -12,6 +12,7 @@ use App\Storm\Model\Info\InfoStore;
 use App\Storm\Query\DreamCategoryQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette\Application\BadRequestException;
+use Nette\Application\Responses\JsonResponse;
 use Nette\Database\Context;
 use App\Gui\Breadcrumb;
 
@@ -34,7 +35,20 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 		$this->addActionItem(new ActionItem('New', '/dreamcategory/new', 'primary'));
 
 		$dreamCategoryQuery = new DreamCategoryQuery($this->database);
-		$this->template->add('categories', $dreamCategoryQuery->find());
+
+		if($this->getHttpRequest()->getQuery('type') == 'json')
+		{
+			$data = [];
+			foreach($dreamCategoryQuery->find() as $category)
+			{
+				$data[] = $category->getName();
+			}
+			$this->sendResponse(new JsonResponse($data));
+		}
+		else
+		{
+			$this->template->add('categories', $dreamCategoryQuery->find());
+		}
 	}
 
 	public function renderShow(int $id)
@@ -137,7 +151,7 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 		}
 		else
 		{
-			throw new BadRequestException('No category ' . $id, '404');
+			throw new BadRequestException('No dream category ' . $id, '404');
 		}
 	}
 }

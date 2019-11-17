@@ -24,6 +24,7 @@ class DreamCategoryQuery extends SqlQuery
 	protected function buildQuery(): Selection
 	{
 		$dreamCategories = $this->connection->table('dream_category');
+		$dreamCategories->order('name ASC');
 
 		if(isset($this->id))
 		{
