@@ -11,6 +11,7 @@ use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
+use App\Info\PathInfo;
 use App\Storm\Model\DreamModel;
 use App\Storm\Model\DreamToDreamTypeModel;
 use App\Storm\Model\DreamTypeModel;
@@ -180,13 +181,6 @@ final class DreamPresenter extends BasePresenter
 		$sorcerer = new Sorcerer($model, $action, 'post');
 		$sorcerer->setMode($mode);
 
-		if($mode == Sorcerer::EDIT)
-		{
-			$sorcerer->addElement(
-				new HiddenInput($model, 'id')
-			);
-		}
-
 		$sorcerer->addElement(
 			new WithLabel('Title', new TextInput($model, 'title'))
 		);
@@ -199,14 +193,11 @@ final class DreamPresenter extends BasePresenter
 			]))
 		);
 
-		$templateFile = $this->context->parameters['templatePath'] . '/components/dream_types_edit.latte';
-
-
 		$dreamTypeQuery = new DreamTypeQuery($this->database);
 		$dreamTypeQuery->excludeNormal();
 
 		$database = $this->database;
-		$sorcerer->addElement(new WithLabel('Dream Type', new LatteTemplate($templateFile, [
+		$sorcerer->addElement(new WithLabel('Dream Type', new LatteTemplate('components/dream_types_edit.latte', [
 			'dreamTypes' => $dreamTypeQuery->find(),
 			'checked' => function (DreamTypeModel $type) use($model, $database){
 				if(InfoStore::getInstance()->isNew($model))

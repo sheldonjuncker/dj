@@ -1,5 +1,4 @@
 parameters:
-    templatePath: C:/xampp/htdocs/app/Presenters/templates
 
 application:
 	errorPresenter: Error

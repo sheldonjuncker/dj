@@ -2,6 +2,7 @@
 
 namespace App\Gui\Form\Element;
 
+use App\Info\PathInfo;
 use Latte\Engine;
 
 class LatteTemplate extends Element
@@ -11,7 +12,8 @@ class LatteTemplate extends Element
 
 	public function __construct(string $template, array $parameters = [])
 	{
-		$this->template = $template;
+		$templatePath = PathInfo::getInstance()->getTemplatePath();
+		$this->template = $templatePath . '/' . $template;
 		$this->parameters = $parameters;
 	}
 

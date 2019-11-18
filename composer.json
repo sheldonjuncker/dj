@@ -27,7 +27,10 @@
 		"nette/tester": "^2.0"
 	},
 	"autoload": {
-		"classmap": ["app/Bootstrap.php"]
+		"classmap": ["app/"],
+      "psr-0": {
+        "App\\": "app/"
+      }
 	},
 	"minimum-stability": "stable",
 	"config": {
