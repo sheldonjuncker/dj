@@ -18,5 +18,18 @@
 		<div class="row col-lg-12">
 			{$dreamTypesElement->render()|noescape}
 		</div>
+		<div class="row col-lg-12">
+			<div class="form-group">
+				<label>Dream Categories</label>
+				<div>
+					{foreach $categories as $category}
+						<span class="badge badge-primary badge-pill rounded-pill">{$category}</span>
+					{/foreach}
+					{if !$categories}
+						<span class="badge badge-primary badge-pill rounded-pill">None</span>
+					{/if}
+				</div>
+			</div>
+		</div>
 	</div>
 {/block}

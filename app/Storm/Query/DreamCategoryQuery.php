@@ -9,10 +9,17 @@ use Nette\Database\Table\Selection;
 class DreamCategoryQuery extends SqlQuery
 {
 	protected $id;
+	protected $name;
 
 	public function id(int $id): DreamCategoryQuery
 	{
 		$this->id = $id;
+		return $this;
+	}
+
+	public function name(string $name)
+	{
+		$this->name = $name;
 		return $this;
 	}
 
@@ -29,6 +36,11 @@ class DreamCategoryQuery extends SqlQuery
 		if(isset($this->id))
 		{
 			$dreamCategories->where('id = ?', $this->id);
+		}
+
+		if(isset($this->name))
+		{
+			$dreamCategories->where('name = ?', $this->name);
 		}
 
 		return $dreamCategories;

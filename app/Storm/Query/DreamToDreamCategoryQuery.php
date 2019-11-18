@@ -12,15 +12,17 @@ class DreamToDreamCategoryQuery extends SqlQuery
 	protected $dream_id;
 	protected $category_id;
 
-	public function dream(string $id)
+	public function dream(string $id): self
 	{
 		$uuidFormatter = new UuidDataFormatter();
 		$this->dream_id = $uuidFormatter->formatToDataSource($id);
+		return $this;
 	}
 
-	public function category(int $id)
+	public function category(int $id): self
 	{
 		$this->category_id = $id;
+		return $this;
 	}
 
 	protected function getModel(): Model
@@ -43,5 +45,29 @@ class DreamToDreamCategoryQuery extends SqlQuery
 		}
 
 		return $table;
+	}
+
+	/**
+	 * @return DreamToDreamCategoryModel[]
+	 */
+	public function find(): \Iterator
+	{
+		yield from parent::find();
+	}
+
+	/**
+	 * @return DreamToDreamCategoryModel|null
+	 */
+	public function findOne(): ?Model
+	{
+		return parent::findOne();
+	}
+
+	/**
+	 * @return DreamToDreamCategoryModel[]
+	 */
+	public function findAll(): array
+	{
+		return parent::findAll();
 	}
 }

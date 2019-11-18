@@ -7,20 +7,25 @@ use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\DateInput;
 use App\Gui\Form\Element\HiddenInput;
 use App\Gui\Form\Element\LatteTemplate;
+use App\Gui\Form\Element\Tag;
 use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
 use App\Info\PathInfo;
 use App\Storm\Model\DreamModel;
+use App\Storm\Model\DreamToDreamCategoryModel;
 use App\Storm\Model\DreamToDreamTypeModel;
 use App\Storm\Model\DreamTypeModel;
 use App\Storm\Model\Info\InfoStore;
+use App\Storm\Query\DreamCategoryQuery;
 use App\Storm\Query\DreamQuery;
+use App\Storm\Query\DreamToDreamCategoryQuery;
 use App\Storm\Query\DreamToDreamTypeQuery;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette;
+use Tracy\Debugger;
 
 final class DreamPresenter extends BasePresenter
 {
@@ -75,14 +80,14 @@ final class DreamPresenter extends BasePresenter
 		$dream = $dreamQuery->id($id)->findOne();
 		$this->template->add('dream', $dream);
 
-		$templateFile = $this->context->parameters['templatePath'] . '/components/dream_types_edit.latte';
 		$database = $this->database;
 
 		$dreamTypeQuery = new DreamTypeQuery($this->database);
 		$dreamTypeQuery->excludeNormal();
 
+		//Dream types
 		$sorcerer = new Sorcerer($dream, '', '');
-		$dreamTypesElement = new LatteTemplate($templateFile, [
+		$dreamTypesElement = new LatteTemplate('components/dream_types_edit.latte', [
 			'dreamTypes' => $dreamTypeQuery->find(),
 			'checked' => function (DreamTypeModel $type) use($dream, $database){
 				$dreamToDreamTypeQuery = new DreamToDreamTypeQuery($database);
@@ -101,6 +106,23 @@ final class DreamPresenter extends BasePresenter
 		]);
 		$sorcerer->addElement(new WithLabel('Dream Type', $dreamTypesElement));
 		$this->template->add('dreamTypesElement', $sorcerer);
+
+		//Dream categories
+		$dreamToDreamCategories = [];
+		$dreamCategoriesQuery = new DreamToDreamCategoryQuery($this->database);
+		$dreamToDreamCategories = $dreamCategoriesQuery->dream($dream->getId())->findAll();
+
+		$categories = [];
+		foreach($dreamToDreamCategories as $dreamToDreamCategory)
+		{
+			$dreamCategoryQuery = new DreamCategoryQuery($this->database);
+			$dreamCategory = $dreamCategoryQuery->id($dreamToDreamCategory->getCategoryId())->findOne();
+			if($dreamCategory)
+			{
+				$categories[] = $dreamCategory->getName();
+			}
+		}
+		$this->template->add('categories', $categories);
 	}
 
 	public function renderEdit(string $id)
@@ -161,7 +183,30 @@ final class DreamPresenter extends BasePresenter
 				$dreamToTypeModel = new DreamToDreamTypeModel();
 				$dreamToTypeModel->setDreamId($dream->getId());
 				$dreamToTypeModel->setTypeId($dreamType);
-				$dreamSaver->save($dreamToTypeModel);
+				$dreamSaver->insert($dreamToTypeModel);
+			}
+		}
+
+		//Remove all dream category associations
+		$dreamToDreamCategoryQuery = new DreamToDreamCategoryQuery($this->database);
+		foreach($dreamToDreamCategoryQuery->dream($dream->getId())->find() as $dreamToDreamCategory)
+		{
+			$dreamSaver->delete($dreamToDreamCategory);
+		}
+
+		//Add new category associations
+		$categories = explode(',', $dreamPost['categories'] ?? '');
+
+		foreach($categories as $category)
+		{
+			$dreamCategoryQuery = new DreamCategoryQuery($this->database);
+			$dreamCategory = $dreamCategoryQuery->name($category)->findOne();
+			if($dreamCategory)
+			{
+				$dreamToDreamCategory = new DreamToDreamCategoryModel();
+				$dreamToDreamCategory->setDreamId($dream->getId());
+				$dreamToDreamCategory->setCategoryId($dreamCategory->getId());
+				$dreamSaver->insert($dreamToDreamCategory);
 			}
 		}
 
@@ -193,6 +238,7 @@ final class DreamPresenter extends BasePresenter
 			]))
 		);
 
+		//Add dream to dream types
 		$dreamTypeQuery = new DreamTypeQuery($this->database);
 		$dreamTypeQuery->excludeNormal();
 
@@ -219,6 +265,35 @@ final class DreamPresenter extends BasePresenter
 			},
 			'disabled' => ''
 		])));
+
+		//Add dream to dream categories
+		$dreamToDreamCategories = [];
+		if($mode == Sorcerer::EDIT)
+		{
+			$dreamCategoriesQuery = new DreamToDreamCategoryQuery($this->database);
+			$dreamToDreamCategories = $dreamCategoriesQuery->dream($model->getId())->findAll();
+		}
+
+		$categories = [];
+		foreach($dreamToDreamCategories as $dreamToDreamCategory)
+		{
+			$dreamCategoryQuery = new DreamCategoryQuery($this->database);
+			$dreamCategory = $dreamCategoryQuery->id($dreamToDreamCategory->getCategoryId())->findOne();
+			if($dreamCategory)
+			{
+				$categories[] = $dreamCategory->getName();
+			}
+		}
+
+		$sorcerer->addElement(new WithLabel('Dream Categories', new Tag('input', '', [
+			'name' => 'Dream[categories]',
+			'id' => 'Dream_categories',
+			'value' => implode(',', $categories)
+		])));
+		$sorcerer->addElement(new Tag('script', '', [
+			'src' => '/assets/js/components/dream_categories.js',
+			'defer' => true
+		]));
 
 		$sorcerer->addSubmit();
 		return $sorcerer;

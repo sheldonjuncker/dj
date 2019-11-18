@@ -12,6 +12,26 @@ class DreamToDreamCategoryModel extends BaseModel
 	protected $dream_id;
 	protected $category_id;
 
+	public function getDreamId(): string
+	{
+		return $this->dream_id;
+	}
+
+	public function setDreamId(string $id)
+	{
+		$this->dream_id = $id;
+	}
+
+	public function getCategoryId(): int
+	{
+		return $this->category_id;
+	}
+
+	public function setCategoryId(int $id)
+	{
+		$this->category_id = $id;
+	}
+
 	public function getDataDefinition(): DataDefinition
 	{
 		return new DataDefinition($this, [
