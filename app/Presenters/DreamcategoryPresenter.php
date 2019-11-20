@@ -8,7 +8,6 @@ use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
 use App\Storm\Model\DreamCategoryModel;
-use App\Storm\Model\Info\InfoStore;
 use App\Storm\Query\DreamCategoryQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette\Application\BadRequestException;
@@ -41,7 +40,10 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 			$data = [];
 			foreach($dreamCategoryQuery->find() as $category)
 			{
-				$data[] = $category->getName();
+				$data[$category->getId()] = [
+					'id' => $category->getId(),
+					'name' => $category->getName()
+				];
 			}
 			$this->sendResponse(new JsonResponse($data));
 		}

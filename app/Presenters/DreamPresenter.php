@@ -167,16 +167,16 @@ final class DreamPresenter extends BasePresenter
 		])));
 
 		//Add dream to dream categories
-		$categoryNames = [];
+		$categories = [];
 		foreach($dreamWeaver->getCategories() as $category)
 		{
-			$categoryNames[] = $category->getName();
+			$categories[] = $category->getId();
 		}
 
 		$sorcerer->addElement(new WithLabel('Dream Categories', new Tag('input', '', [
 			'name' => 'Dream[categories]',
 			'id' => 'Dream_categories',
-			'value' => implode(',', $categoryNames)
+			'value' => implode(',', $categories)
 		])));
 		$sorcerer->addElement(new Tag('script', '', [
 			'src' => '/assets/js/components/dream_categories.js',

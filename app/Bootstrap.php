@@ -22,7 +22,7 @@ class Bootstrap
 		//$configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
 		$configurator->enableTracy(__DIR__ . '/../log');
 
-		$configurator->setTimeZone('Europe/Prague');
+		$configurator->setTimeZone('America/New_York');
 		$configurator->setTempDirectory(__DIR__ . '/../temp');
 
 		//Why create your own autoloader when you have composer and it's literally the same thing???

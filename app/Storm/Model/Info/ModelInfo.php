@@ -5,11 +5,30 @@ namespace App\Storm\Model\Info;
 /**
  * Class ModelInfo
  *
- * Globally accessible information about models.
+ * PHP has no way of association data to an object without storing the data
+ * within the object as PHP reuses it's unique object IDs.
+ *
+ * This class contains data needed in order to efficiently work with models.
  *
  * @package App\Storm\Model\Info
  */
 class ModelInfo
 {
-	public $new = true;
+	protected $new = true;
+
+	/**
+	 * @return bool
+	 */
+	public function isNew(): bool
+	{
+		return $this->new;
+	}
+
+	/**
+	 * @param bool $new
+	 */
+	public function setNew(bool $new)
+	{
+		$this->new = $new;
+	}
 }

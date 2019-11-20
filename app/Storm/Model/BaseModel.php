@@ -5,10 +5,25 @@ namespace App\Storm\Model;
 
 
 use App\Storm\DataDefinition\DataFieldDefinition;
-use Nette\Schema\Elements\Base;
+use App\Storm\Model\Info\ModelInfo;
 
 abstract class BaseModel implements Model
 {
+	/** @var  ModelInfo $info */
+	private $info;
+
+	/**
+	 * @return ModelInfo
+	 */
+	public function getInfo(): ModelInfo
+	{
+		if(!$this->info)
+		{
+			$this->info = new ModelInfo();
+		}
+		return $this->info;
+	}
+
 	/**
 	 * Converts the Model to an array.
 	 *
@@ -43,7 +58,7 @@ abstract class BaseModel implements Model
 	 * @param array $data
 	 * @return BaseModel
 	 */
-	public static function fromArray(array $data): BaseModel
+	public function fromArray(array $data, int $format = DataFieldDefinition::FORMAT_TYPE_NONE): BaseModel
 	{
 		$model = new static();
 		$dataDefinition = $model->getDataDefinition();
@@ -51,7 +66,7 @@ abstract class BaseModel implements Model
 		{
 			if($field = $dataDefinition->getField($key))
 			{
-				$field->setValue($value);
+				$field->setValue($value, $format);
 			}
 		}
 		return $model;

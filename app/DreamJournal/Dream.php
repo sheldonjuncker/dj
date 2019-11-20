@@ -2,6 +2,7 @@
 
 namespace App\DreamJournal;
 
+use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\Model\DreamCategoryModel;
 use App\Storm\Model\DreamModel;
 use App\Storm\Model\DreamToDreamCategoryModel;
@@ -89,13 +90,12 @@ class Dream
 	public function save(array $dreamPost)
 	{
 		$dreamTypePost = $dreamPost['types'] ?? [];
+		Debugger::dump($dreamPost);
+		die();
 		$dream = $this->dreamModel;
 
-		$dream->setTitle($dreamPost['title']);
-		$dreamtAt = $dreamPost['dreamt_at'] ?? 'now';
-		$dreamtAt = new DateTime($dreamtAt);
-		$dream->setDreamtAt($dreamtAt);
-		$dream->setDescription($dreamPost['description']);
+		//Set data from POST and then override user since there's only one and it's me
+		$dream->fromArray($dreamPost, DataFieldDefinition::FORMAT_TYPE_FROM_UI);
 		$dream->setUserId(1);
 
 		$dreamSaver = new SqlSaver($this->database);
@@ -109,11 +109,10 @@ class Dream
 		{
 			foreach($dreamTypePost as $dreamType => $checked)
 			{
-				Debugger::dump("Adding dream type {$dreamType}.");
-				$dreamTypeQuery = new DreamTypeQuery($this->database);
-				$this->dreamTypes->add($dreamTypeQuery->id($dreamType)->findOne());
+				$dreamTypeModel = new DreamTypeModel();
+				$dreamTypeModel->setId($dreamType);
+				$this->dreamTypes->add($dreamTypeModel);
 			}
-			die();
 		}
 		$this->dreamTypes->save();
 
@@ -125,12 +124,13 @@ class Dream
 
 		foreach($categories as $category)
 		{
-			$dreamCategoryQuery = new DreamCategoryQuery($this->database);
-			$dreamCategory = $dreamCategoryQuery->name($category)->findOne();
-			if($dreamCategory)
+			if(!$category)
 			{
-				$this->dreamCategories->add($dreamCategory);
+				continue;
 			}
+			$dreamCategory = new DreamCategoryModel();
+			$dreamCategory->setId($category);
+			$this->dreamCategories->add($dreamCategory);
 		}
 		$this->dreamCategories->save();
 	}

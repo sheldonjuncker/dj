@@ -9,8 +9,13 @@ use App\Storm\DataFormatter\IntegerDataFormatter;
 
 class DreamTypeModel extends BaseModel implements Model
 {
+	/** @var  int $id */
 	protected $id;
+
+	/** @var  string $id */
 	protected $name;
+
+	/** @var  bool  $default */
 	protected $default;
 
 	public function getDataDefinition(): DataDefinition
@@ -25,6 +30,14 @@ class DreamTypeModel extends BaseModel implements Model
 	public function getId(): int
 	{
 		return $this->id;
+	}
+
+	/**
+	 * @param int $id
+	 */
+	public function setId(int $id)
+	{
+		$this->id = $id;
 	}
 
 	public function getName(): string

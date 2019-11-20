@@ -4,7 +4,6 @@
 namespace App\Storm\Query;
 
 use App\Storm\DataDefinition\DataFieldDefinition;
-use App\Storm\Model\Info\InfoStore;
 use Nette\Database\Context;
 use Nette\Database\ResultSet;
 use App\Storm\Model\Model;
@@ -92,7 +91,7 @@ abstract class SqlQuery extends Query
 	 */
 	protected function processResult(Model $model, ActiveRow $result)
 	{
-		InfoStore::getInstance()->setNew($model, false);
+		$model->getInfo()->setNew(false);
 
 		$dataDefinition = $model->getDataDefinition();
 		foreach($result->toArray() as $key => $value)

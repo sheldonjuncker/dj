@@ -37,7 +37,10 @@ class DreamImporter
 			{
 				foreach($jsonData as $dreamData)
 				{
-					$dreamModels[] = DreamModel::fromArray((array) $dreamData);
+					//TODO: Test this as it changed
+					$dreamModel = new DreamModel();
+					$dreamModel->fromArray((array) $dreamData);
+					$dreamModels[] = $dreamModel;
 				}
 			}
 
