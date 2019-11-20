@@ -23,7 +23,7 @@
 				<label>Dream Categories</label>
 				<div>
 					{foreach $categories as $category}
-						<span class="badge badge-primary badge-pill rounded-pill">{$category}</span>
+						<span class="badge badge-primary badge-pill rounded-pill">{$category->getName()}</span>
 					{/foreach}
 					{if !$categories}
 						<span class="badge badge-primary badge-pill rounded-pill">None</span>

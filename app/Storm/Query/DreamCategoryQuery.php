@@ -2,7 +2,9 @@
 
 namespace App\Storm\Query;
 
+use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\DreamCategoryModel;
+use App\Storm\Model\DreamModel;
 use App\Storm\Model\Model;
 use Nette\Database\Table\Selection;
 
@@ -10,6 +12,9 @@ class DreamCategoryQuery extends SqlQuery
 {
 	protected $id;
 	protected $name;
+
+	/** @var  DreamModel $dream */
+	protected $dream;
 
 	public function id(int $id): DreamCategoryQuery
 	{
@@ -20,6 +25,12 @@ class DreamCategoryQuery extends SqlQuery
 	public function name(string $name)
 	{
 		$this->name = $name;
+		return $this;
+	}
+
+	public function dream(DreamModel $dream)
+	{
+		$this->dream = $dream;
 		return $this;
 	}
 
@@ -41,6 +52,13 @@ class DreamCategoryQuery extends SqlQuery
 		if(isset($this->name))
 		{
 			$dreamCategories->where('name = ?', $this->name);
+		}
+
+		if($this->dream)
+		{
+			$dreamCategories->joinWhere(':category', '1');
+			$uuidFormatter = new UuidDataFormatter();
+			$dreamCategories->where(':category.dream_id = ?', $uuidFormatter->formatToDataSource($this->dream->getId()));
 		}
 
 		return $dreamCategories;

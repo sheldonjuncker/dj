@@ -41,7 +41,7 @@ class DreamModel extends BaseModel implements Model
 
 	public function getId(): string
 	{
-		return $this->id;
+		return $this->id ?? '';
 	}
 
 	/**
