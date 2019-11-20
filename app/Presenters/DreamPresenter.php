@@ -2,17 +2,16 @@
 
 namespace App\Presenters;
 
+use App\DreamJournal\Dream;
 use App\Gui\ActionItem;
 use App\Gui\Breadcrumb;
 use App\Gui\Form\Element\DateInput;
-use App\Gui\Form\Element\HiddenInput;
 use App\Gui\Form\Element\LatteTemplate;
 use App\Gui\Form\Element\Tag;
 use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
-use App\Info\PathInfo;
 use App\Storm\Model\DreamModel;
 use App\Storm\Model\DreamToDreamCategoryModel;
 use App\Storm\Model\DreamToDreamTypeModel;

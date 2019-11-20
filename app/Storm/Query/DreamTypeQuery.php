@@ -2,9 +2,12 @@
 
 namespace App\Storm\Query;
 
+use App\Storm\DataFormatter\UuidDataFormatter;
+use App\Storm\Model\DreamModel;
 use App\Storm\Model\DreamTypeModel;
 use App\Storm\Model\Model;
 use Nette\Database\Table\Selection;
+use Tracy\Debugger;
 
 class DreamTypeQuery extends SqlQuery
 {
@@ -16,6 +19,9 @@ class DreamTypeQuery extends SqlQuery
 	protected $excludeNormal = false;
 	protected $nameScope;
 
+	/** @var  DreamModel $dream */
+	protected $dream;
+
 	public function name(string $name): self
 	{
 		$this->nameScope = $name;
@@ -25,6 +31,12 @@ class DreamTypeQuery extends SqlQuery
 	public function excludeNormal(bool $excludeNormal = true)
 	{
 		$this->excludeNormal = $excludeNormal;
+		return $this;
+	}
+
+	public function dream(DreamModel $dream)
+	{
+		$this->dream = $dream;
 		return $this;
 	}
 
@@ -45,6 +57,13 @@ class DreamTypeQuery extends SqlQuery
 		if($this->excludeNormal)
 		{
 			$dreamTypes->where('name <> ?', self::TYPE_NORMAL);
+		}
+
+		if($this->dream)
+		{
+			$dreamTypes->joinWhere(':type', '1');
+			$uuidFormatter = new UuidDataFormatter();
+			$dreamTypes->where(':type.dream_id = ?', $uuidFormatter->formatToDataSource($this->dream->getId()));
 		}
 
 		return $dreamTypes;
