@@ -14,6 +14,7 @@ use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette\Database\Context;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
 
 class Dream
 {
@@ -23,16 +24,19 @@ class Dream
 	/** @var  DreamModel $dreamModel */
 	protected $dreamModel;
 
-	/** @var  DreamTypeModel[] The dream's types. */
+	/** @var  DreamTypeRelation The dream's types. */
 	protected $dreamTypes;
 
-	/** @var DreamCategoryModel[] The dream's categories. */
+	/** @var DreamCategoryRelation The dream's categories. */
 	protected $dreamCategories;
 
 	public function __construct(DreamModel $dreamModel, Context $database)
 	{
 		$this->dreamModel = $dreamModel;
 		$this->database = $database;
+
+		$this->dreamCategories = new DreamCategoryRelation($this->dreamModel, $this->database);
+		$this->dreamTypes = new DreamTypeRelation($this->dreamModel, $this->database);
 	}
 
 	/**
@@ -43,14 +47,7 @@ class Dream
 	 */
 	public function hasType(DreamTypeModel $type): bool
 	{
-		foreach($this->getTypes() as $myType)
-		{
-			if($myType->getId() == $type->getId())
-			{
-				return true;
-			}
-		}
-		return false;
+		return $this->dreamTypes->has($type);
 	}
 
 	/**
@@ -60,18 +57,7 @@ class Dream
 	 */
 	public function getTypes(): array
 	{
-		//Only load once
-		if($this->dreamTypes === NULL)
-		{
-			$this->dreamTypes = [];
-			$dreamTypeQuery = new DreamTypeQuery($this->database);
-			foreach($dreamTypeQuery->dream($this->dreamModel)->find() as $dreamType)
-			{
-				$this->dreamTypes[] = $dreamType;
-			}
-		}
-
-		return $this->dreamTypes;
+		return $this->dreamTypes->get();
 	}
 
 	/**
@@ -92,18 +78,7 @@ class Dream
 	 */
 	public function getCategories(): array
 	{
-		//Only load once
-		if($this->dreamCategories === NULL)
-		{
-			$this->dreamCategories = [];
-			$dreamCategoryQuery = new DreamCategoryQuery($this->database);
-			foreach($dreamCategoryQuery->dream($this->dreamModel)->find() as $dreamCategory)
-			{
-				$this->dreamCategories[] = $dreamCategory;
-			}
-		}
-
-		return $this->dreamCategories;
+		return $this->dreamCategories->get();
 	}
 
 	/**
@@ -127,33 +102,23 @@ class Dream
 		$dreamSaver->save($dream);
 
 		//Remove all dream type associations so that we can readd
-		$dreamToDreamTypeQuery = new DreamToDreamTypeQuery($this->database);
-		$dreamToDreamTypeQuery->dream($dream->getId());
-		foreach($dreamToDreamTypeQuery->find() as $dreamToDreamType)
-		{
-			$dreamSaver->delete($dreamToDreamType);
-		}
-		$this->dreamTypes = NULL;
+		$this->dreamTypes->removeAll();
 
 		//Add new dream type associations
 		if($dreamTypePost)
 		{
 			foreach($dreamTypePost as $dreamType => $checked)
 			{
-				$dreamToTypeModel = new DreamToDreamTypeModel();
-				$dreamToTypeModel->setDreamId($dream->getId());
-				$dreamToTypeModel->setTypeId($dreamType);
-				$dreamSaver->insert($dreamToTypeModel);
+				Debugger::dump("Adding dream type {$dreamType}.");
+				$dreamTypeQuery = new DreamTypeQuery($this->database);
+				$this->dreamTypes->add($dreamTypeQuery->id($dreamType)->findOne());
 			}
+			die();
 		}
+		$this->dreamTypes->save();
 
 		//Remove all dream category associations
-		$dreamToDreamCategoryQuery = new DreamToDreamCategoryQuery($this->database);
-		foreach($dreamToDreamCategoryQuery->dream($dream->getId())->find() as $dreamToDreamCategory)
-		{
-			$dreamSaver->delete($dreamToDreamCategory);
-		}
-		$this->dreamCategories = NULL;
+		$this->dreamCategories->removeAll();
 
 		//Add new category associations
 		$categories = explode(',', $dreamPost['categories'] ?? '');
@@ -164,11 +129,9 @@ class Dream
 			$dreamCategory = $dreamCategoryQuery->name($category)->findOne();
 			if($dreamCategory)
 			{
-				$dreamToDreamCategory = new DreamToDreamCategoryModel();
-				$dreamToDreamCategory->setDreamId($dream->getId());
-				$dreamToDreamCategory->setCategoryId($dreamCategory->getId());
-				$dreamSaver->insert($dreamToDreamCategory);
+				$this->dreamCategories->add($dreamCategory);
 			}
 		}
+		$this->dreamCategories->save();
 	}
 }

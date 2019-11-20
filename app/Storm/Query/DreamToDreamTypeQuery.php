@@ -48,4 +48,28 @@ class DreamToDreamTypeQuery extends SqlQuery
 
 		return $dreamTypes;
 	}
+
+	/**
+	 * @return DreamToDreamTypeModel[]
+	 */
+	public function find(): \Iterator
+	{
+		yield from parent::find();
+	}
+
+	/**
+	 * @return DreamToDreamTypeModel[]
+	 */
+	public function findAll(): array
+	{
+		return parent::findAll();
+	}
+
+	/**
+	 * @return DreamToDreamTypeModel|null
+	 */
+	public function findOne(): ?Model
+	{
+		return parent::findOne();
+	}
 }

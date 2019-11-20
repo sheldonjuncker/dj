@@ -7,7 +7,6 @@ use App\Storm\Model\DreamModel;
 use App\Storm\Model\DreamTypeModel;
 use App\Storm\Model\Model;
 use Nette\Database\Table\Selection;
-use Tracy\Debugger;
 
 class DreamTypeQuery extends SqlQuery
 {
@@ -18,6 +17,7 @@ class DreamTypeQuery extends SqlQuery
 
 	protected $excludeNormal = false;
 	protected $nameScope;
+	protected $id;
 
 	/** @var  DreamModel $dream */
 	protected $dream;
@@ -25,6 +25,12 @@ class DreamTypeQuery extends SqlQuery
 	public function name(string $name): self
 	{
 		$this->nameScope = $name;
+		return $this;
+	}
+
+	public function id(int $id)
+	{
+		$this->id = $id;
 		return $this;
 	}
 
@@ -57,6 +63,11 @@ class DreamTypeQuery extends SqlQuery
 		if($this->excludeNormal)
 		{
 			$dreamTypes->where('name <> ?', self::TYPE_NORMAL);
+		}
+
+		if($this->id)
+		{
+			$dreamTypes->where('id = ?', $this->id);
 		}
 
 		if($this->dream)
