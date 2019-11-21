@@ -26,6 +26,7 @@ class DreamCategoryRelation extends RelatedData
 	{
 		$query = new DreamToDreamCategoryQuery($this->database);
 		$mappingModel = $query->dream($this->dream->getId())->category($category->getId())->findOne();
+
 		if(!$mappingModel && $create)
 		{
 			$mappingModel = new DreamToDreamCategoryModel();
@@ -38,15 +39,18 @@ class DreamCategoryRelation extends RelatedData
 	public function save()
 	{
 		$sqlSaver = new SqlSaver($this->database);
+
+		//Delete removed relations
 		foreach($this->deleted as $deletedCategory)
 		{
 			$mapping = $this->getMappingModel($deletedCategory);
 			if($mapping)
 			{
-				$this->deleted->detach($deletedCategory);
 				$sqlSaver->delete($mapping);
 			}
 		}
+		$this->deleted->removeAll($this->deleted);
+
 
 		foreach($this->data as $dreamCategory)
 		{

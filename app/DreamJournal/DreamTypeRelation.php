@@ -40,13 +40,13 @@ class DreamTypeRelation extends RelatedData
 		$sqlSaver = new SqlSaver($this->database);
 		foreach($this->deleted as $deletedType)
 		{
-			$this->deleted->detach($deletedType);
 			$mapping = $this->getMappingModel($deletedType);
 			if($mapping)
 			{
 				$sqlSaver->delete($mapping);
 			}
 		}
+		$this->deleted->removeAll($this->deleted);
 
 		foreach($this->data as $dreamType)
 		{

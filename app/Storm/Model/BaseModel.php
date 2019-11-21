@@ -56,12 +56,10 @@ abstract class BaseModel implements Model
 	 * Needs to be refactored into a Query class which uses an array data source.
 	 *
 	 * @param array $data
-	 * @return BaseModel
 	 */
-	public function fromArray(array $data, int $format = DataFieldDefinition::FORMAT_TYPE_NONE): BaseModel
+	public function fromArray(array $data, int $format = DataFieldDefinition::FORMAT_TYPE_NONE)
 	{
-		$model = new static();
-		$dataDefinition = $model->getDataDefinition();
+		$dataDefinition = $this->getDataDefinition();
 		foreach($data as $key => $value)
 		{
 			if($field = $dataDefinition->getField($key))
@@ -69,7 +67,6 @@ abstract class BaseModel implements Model
 				$field->setValue($value, $format);
 			}
 		}
-		return $model;
 	}
 
 	public function getBaseName(): string

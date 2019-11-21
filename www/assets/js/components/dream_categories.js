@@ -10,7 +10,7 @@ $(document).ready(function(){
 			categoryNames.initialize();
 
 			var $input = $('#Dream_categories');
-			$('#Dream_categories').tagsinput({
+			$input.tagsinput({
 				typeaheadjs: {
 					name: 'categoryNames',
 					displayKey: 'name',
@@ -24,10 +24,18 @@ $(document).ready(function(){
 
 			//Initialize
 			var ids = $input.val().split(',');
+			console.log(ids);
 			for(var i=0; i<ids.length; i++)
 			{
 				var id = ids[i];
-				$('#Dream_categories').tagsinput('add', data[id]);
+				for(var j=0; j<data.length; j++)
+				{
+					if(data[j].id == id)
+					{
+						$input.tagsinput('add', data[j]);
+					}
+				}
+
 			}
 		},
 		error: function(){

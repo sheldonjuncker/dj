@@ -83,10 +83,12 @@ abstract class RelatedData
 	 */
 	public function removeAll(bool $delete = true)
 	{
-		foreach($this->data as $data)
+		if($delete)
 		{
-			$this->remove($data, $delete);
+			$this->deleted->addAll($this->data);
 		}
+
+		$this->data->removeAll($this->data);
 	}
 
 	/**

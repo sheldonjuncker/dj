@@ -40,7 +40,7 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 			$data = [];
 			foreach($dreamCategoryQuery->find() as $category)
 			{
-				$data[$category->getId()] = [
+				$data[] = [
 					'id' => $category->getId(),
 					'name' => $category->getName()
 				];

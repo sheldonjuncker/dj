@@ -5,16 +5,10 @@ namespace App\DreamJournal;
 use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\Model\DreamCategoryModel;
 use App\Storm\Model\DreamModel;
-use App\Storm\Model\DreamToDreamCategoryModel;
-use App\Storm\Model\DreamToDreamTypeModel;
 use App\Storm\Model\DreamTypeModel;
-use App\Storm\Query\DreamCategoryQuery;
-use App\Storm\Query\DreamToDreamCategoryQuery;
-use App\Storm\Query\DreamToDreamTypeQuery;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette\Database\Context;
-use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
 class Dream
@@ -89,9 +83,8 @@ class Dream
 	 */
 	public function save(array $dreamPost)
 	{
+		//Debugger::dump($dreamPost);
 		$dreamTypePost = $dreamPost['types'] ?? [];
-		Debugger::dump($dreamPost);
-		die();
 		$dream = $this->dreamModel;
 
 		//Set data from POST and then override user since there's only one and it's me
@@ -102,7 +95,9 @@ class Dream
 		$dreamSaver->save($dream);
 
 		//Remove all dream type associations so that we can readd
+		$this->dreamTypes->load();
 		$this->dreamTypes->removeAll();
+		$this->dreamTypes->save();
 
 		//Add new dream type associations
 		if($dreamTypePost)
@@ -117,7 +112,9 @@ class Dream
 		$this->dreamTypes->save();
 
 		//Remove all dream category associations
+		$this->dreamCategories->load();
 		$this->dreamCategories->removeAll();
+		$this->dreamCategories->save();
 
 		//Add new category associations
 		$categories = explode(',', $dreamPost['categories'] ?? '');
