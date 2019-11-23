@@ -91,7 +91,11 @@ getPaths = () => {
       mrare: {
         all: "js/mrare/**/*.js",
         index: "js/mrare/index.js",
-      }
+      },
+	  custom:{
+		all: "js/custom/test.js",
+		index: "js/custom/index.js"
+	  }
     },
     scss: {
       folder: 'scss',
@@ -234,6 +238,38 @@ gulp.task('bootstrapjs', async (done) => {
   // Reload Browsersync clients
   reload();
   done();
+});
+
+gulp.task('customjs', async (done) => {
+	let fileDest = 'custom.js';
+	const banner = `/*!
+  * DreamJournal Custom JS
+  * Copyright 2019-${year} Sheldon Juncker
+  * All custom JS gets compiled into this file.
+  */`;
+
+	//I don't think we need anything here.
+	const external = [];
+	const plugins = [];
+	const globals = {};
+
+	const bundle = await rollup.rollup({
+		input: paths.js.custom.index,
+		external,
+		plugins
+	});
+
+	await bundle.write({
+		file: path.resolve(__dirname, `./${paths.dist.js}${path.sep}${fileDest}`),
+		banner,
+		globals,
+		format: 'umd',
+		name: 'custom',
+		sourcemap: true,
+	});
+	// Reload Browsersync clients
+	reload();
+	done();
 });
 
 gulp.task('mrarejs', async (done) => {
