@@ -1,4 +1,7 @@
 import Test from './test'
+import SummerNote from './SummerNote'
+
 export{
-	Test
+	Test,
+	SummerNote
 }

@@ -154,7 +154,8 @@ final class DreamPresenter extends BasePresenter
 		);
 		$sorcerer->addElement(
 			new WithLabel('Description', new TextArea($model, 'description', [
-				'rows' => 6
+				'rows' => 6,
+				'id' => 'Dream_description'
 			]))
 		);
 
