@@ -5,5 +5,5 @@ temp/
 composer.lock
 composer.phar
 app/config/local.neon
-www/theme/dist
-www/theme/node_modules
+www/dist
+www/node_modules

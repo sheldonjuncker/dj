@@ -141,7 +141,7 @@ getPaths = () => {
       jsSources: 'dist/js',
       fonts: 'dist/assets/fonts',
       video: 'dist/assets/video',
-      documentation: 'dist/documentation',
+      //documentation: 'dist/documentation',
       exclude: ['!**/desktop.ini', '!**/.DS_store'],
     },
     copyDependencies: copyDeps,
@@ -368,6 +368,7 @@ gulp.task('deps', async (done) => {
 });
 
 // watch files for changes and reload
+/*
 gulp.task('serve', function (done) {
   browserSync({
     server: {
@@ -424,8 +425,10 @@ gulp.task('watch', function (done) {
   done();
   // End watch task
 
-});
+});*/
 
-gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('html', 'sass', 'sass-min', 'bootstrapjs', 'mrarejs'), gulp.series('serve', 'watch')));
+//Not building HTML by default as we're using our own templating.
 
-gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('html', 'sass', 'sass-min', 'bootstrapjs', 'mrarejs')));
+gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs'), gulp.series('serve', 'watch')));
+
+gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs')));
