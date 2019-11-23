@@ -1,7 +1,7 @@
-import Test from './test'
 import SummerNote from './SummerNote'
+import DreamCategory from './DreamCategory'
 
 export{
-	Test,
-	SummerNote
+	SummerNote,
+	DreamCategory
 }

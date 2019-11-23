@@ -23,7 +23,8 @@ const autoprefixer = require('gulp-autoprefixer'),
   sourcemaps = require('gulp-sourcemaps'),
   themeYaml = './theme.yml',
   year = new Date().getFullYear(),
-  yaml = require('yamljs');
+  yaml = require('yamljs'),
+  concat = require('gulp-concat');
 
 let copyDeps = yaml.load(copyDepsYaml);
 let theme = yaml.load(themeYaml);
@@ -92,9 +93,12 @@ getPaths = () => {
         all: "js/mrare/**/*.js",
         index: "js/mrare/index.js",
       },
-	  custom:{
-		all: "js/custom/test.js",
+	  custom: {
+		all: "js/custom/*.js",
 		index: "js/custom/index.js"
+	  },
+	  tagsinput: {
+      	all: "js/tagsinput/*.js"
 	  }
     },
     scss: {
@@ -133,6 +137,7 @@ getPaths = () => {
       css: 'dist/assets/css',
       scssSources: 'dist/scss',
       js: 'dist/assets/js',
+	  tagsinput: 'dist/assets/js/tagsinput',
       jsSources: 'dist/js',
       fonts: 'dist/assets/fonts',
       video: 'dist/assets/video',
@@ -268,6 +273,14 @@ gulp.task('customjs', async (done) => {
 		sourcemap: true,
 	});
 	// Reload Browsersync clients
+	reload();
+	done();
+});
+
+gulp.task('tagsinputjs', async (done) => {
+	gulp.src(paths.js.tagsinput.all)
+		.pipe(concat('tagsinput-typeahead.js'))
+		.pipe(gulp.dest(paths.dist.tagsinput));
 	reload();
 	done();
 });
