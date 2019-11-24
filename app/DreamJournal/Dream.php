@@ -42,7 +42,14 @@ class Dream
 	 */
 	public function hasType(DreamTypeModel $type): bool
 	{
-		return $this->dreamTypes->has($type);
+		foreach($this->getTypes() as $myType)
+		{
+			if($type->getId() == $myType->getId())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

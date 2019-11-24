@@ -59,8 +59,14 @@ class DreamCategoryRelation extends RelatedData
 		}
 	}
 
-	public function load()
+
+	public function load(bool $refresh = false)
 	{
+		if(!$refresh && $this->loaded)
+		{
+			return;
+		}
+
 		$this->clear();
 		$dreamCategoryQuery = new DreamCategoryQuery($this->database);
 		foreach($dreamCategoryQuery->dream($this->dream)->find() as $dreamCategory)

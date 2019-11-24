@@ -55,8 +55,13 @@ class DreamTypeRelation extends RelatedData
 		}
 	}
 
-	public function load()
+	public function load(bool $refresh = false)
 	{
+		if(!$refresh && $this->loaded)
+		{
+			return;
+		}
+
 		$this->clear();
 		$dreamTypeQuery = new DreamTypeQuery($this->database);
 		foreach($dreamTypeQuery->dream($this->dream)->find() as $dreamType)

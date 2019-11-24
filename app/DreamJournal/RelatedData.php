@@ -47,26 +47,26 @@ abstract class RelatedData
 
 	/**
 	 * Checks to see if the model exists in the related data.
+	 * This loads all related data.
 	 *
 	 * @param $data
 	 * @return bool
 	 */
 	public function has(Model $data): bool
 	{
+		$this->load();
 		return $this->data->offsetExists($data);
 	}
 
 	/**
 	 * Gets all of the loaded data.
+	 * This loads the data if not loaded.
 	 *
 	 * @return Model[]
 	 */
 	public function get(): array
 	{
-		if(!$this->loaded)
-		{
-			$this->load();
-		}
+		$this->load();
 
 		$data = [];
 		foreach($this->data as $key => $value)
@@ -78,11 +78,13 @@ abstract class RelatedData
 
 	/**
 	 * Removes all related data and optionally schedules for deletion.
+	 * This loads all related data.
 	 *
 	 * @param bool $delete
 	 */
 	public function removeAll(bool $delete = true)
 	{
+		$this->load();
 		if($delete)
 		{
 			$this->deleted->addAll($this->data);
@@ -100,6 +102,6 @@ abstract class RelatedData
 		$this->deleted->removeAll($this->deleted);
 	}
 
-	abstract public function load();
+	abstract public function load(bool $refresh = false);
 	abstract public function save();
 }
