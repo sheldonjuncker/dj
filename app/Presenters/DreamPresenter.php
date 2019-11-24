@@ -179,10 +179,6 @@ final class DreamPresenter extends BasePresenter
 			'id' => 'Dream_categories',
 			'value' => implode(',', $categories)
 		])));
-		$sorcerer->addElement(new Tag('script', '', [
-			'src' => '/assets/js/components/dream_categories.js',
-			'defer' => true
-		]));
 
 		$sorcerer->addSubmit();
 		return $sorcerer;

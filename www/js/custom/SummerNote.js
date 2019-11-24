@@ -1,5 +1,5 @@
-class SummerNote{
-	init(id, options){
+class SummerNote {
+	init(id, options) {
 		$('#' + id).summernote(options || {});
 	}
 }
@@ -9,15 +9,16 @@ $(document).ready(function(){
 	summerNote.init('Dream_description', {
 		minHeight: '400px',
 		toolbar: [
-			['style', ['style']],
-			['font', ['bold', 'underline', 'clear']],
-			['fontname', ['fontname']],
-			['color', ['color']],
+			['style', ['bold', 'italic', 'underline', 'clear']],
+			['font', ['strikethrough', 'superscript', 'subscript']],
+			['fontsize', []],
 			['para', ['ul', 'ol', 'paragraph']],
-			['table', ['table']],
-			['insert',],
-			['view', ['fullscreen', 'help']],
+			['table', []],
+			['color', []],
+			['insert',[]],
+			['view', ['fullscreen']],
 		],
+		fontSizes: [8,9,10,11,12,14,16,18,20,24,28,32,36],
 		disableDragAndDrop: true,
 		codeviewFilter: true,
 		codeviewIframeFilter: true

@@ -32,6 +32,7 @@ class Bootstrap
 
 		$configurator->addConfig(__DIR__ . '/config/common.neon');
 		$configurator->addConfig(__DIR__ . '/config/local.neon');
+		unset($configurator->defaultExtensions['cache']);
 
 		return $configurator;
 	}

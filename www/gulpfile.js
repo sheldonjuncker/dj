@@ -429,6 +429,6 @@ gulp.task('watch', function (done) {
 
 //Not building HTML by default as we're using our own templating.
 
-gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs'), gulp.series('serve', 'watch')));
+gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs') /*, gulp.series('serve', 'watch')*/));
 
 gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs')));

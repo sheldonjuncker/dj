@@ -2,7 +2,6 @@ class DreamCategory{
 	init(id){
 		$.ajax('/dreamcategory?type=json', {
 			success: function(data){
-				console.log(data);
 				let categoryNames = new Bloodhound({
 					datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
 					queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -25,7 +24,6 @@ class DreamCategory{
 
 				//Initialize
 				let ids = $input.val().split(',');
-				console.log(ids);
 				for(let i=0; i<ids.length; i++)
 				{
 					let id = ids[i];
