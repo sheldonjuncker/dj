@@ -19,6 +19,9 @@ use App\Storm\Model\Model;
  */
 abstract class Query
 {
+	/** @var array Basic key/value field scopes. */
+	protected $fields = [];
+
 	/**
 	 * Gets an iterator for the models to improve performance.
 	 *
@@ -39,4 +42,23 @@ abstract class Query
 	 * @return Model[]
 	 */
 	abstract public function findAll(): array;
+
+	/**
+	 * Uses horrible dynamic PHP to add a scope on the fly.
+	 *
+	 * @param string $field The model field to query.
+	 * @param mixed $value The value to query for.
+	 *
+	 * @note Each query class must apply conditions for the $fields array
+	 * in order for this method to have an effect.
+	 * This is used to provide dynamic functionality for model querying
+	 * and is used for relationships.
+	 *
+	 * @return Query
+	 */
+	public function applyFieldScope(string $field, $value): Query
+	{
+		$this->fields[$field] = $value;
+		return $this;
+	}
 }

@@ -49,7 +49,7 @@ class DreamQuery extends SqlQuery
 		return $this;
 	}
 
-	protected function getModel(): Model
+	public function getModel(): Model
 	{
 		return new DreamModel();
 	}

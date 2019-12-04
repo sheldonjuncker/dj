@@ -28,7 +28,7 @@ abstract class SqlQuery extends Query
 	}
 
 	abstract protected function buildQuery(): Selection;
-	abstract protected function getModel(): Model;
+	abstract public function getModel(): Model;
 
 	/**
 	 * Finds iteratively for improved performance.
