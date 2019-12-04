@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 const autoprefixer = require('gulp-autoprefixer'),
   browserSync = require('browser-sync'),
   cleanCSS = require('gulp-clean-css'),
@@ -9,7 +10,6 @@ const autoprefixer = require('gulp-autoprefixer'),
   del = require('del'),
   eslint = require('gulp-eslint'),
   gulp = require('gulp'),
-  log = require('fancy-log'),
   newer = require('gulp-newer'),
   path = require('path'),
   reload = browserSync.reload,
@@ -97,6 +97,10 @@ getPaths = () => {
 		all: "js/custom/*.js",
 		index: "js/custom/index.js"
 	  },
+	  dreamQuery: {
+      	all: "js/dreamQuery/*.js",
+		index: "js/dreamQuery/index.js"
+	  }	,
 	  tagsinput: {
       	all: "js/tagsinput/*.js"
 	  }
@@ -138,6 +142,7 @@ getPaths = () => {
       scssSources: 'dist/scss',
       js: 'dist/assets/js',
 	  tagsinput: 'dist/assets/js/tagsinput',
+      vue: 'dist/assets/js/vue',
       jsSources: 'dist/js',
       fonts: 'dist/assets/fonts',
       video: 'dist/assets/video',
@@ -245,6 +250,36 @@ gulp.task('bootstrapjs', async (done) => {
   done();
 });
 
+gulp.task('dreamqueryjs', async (done) => {
+	let fileDest = 'dream-query.js';
+	const banner = `/**
+  * Vue components to build dream queries via an interactive GUI.
+  */`;
+
+	//I don't think we need anything here.
+	const external = [];
+	const plugins = [];
+	const globals = {};
+
+	const bundle = await rollup.rollup({
+		input: paths.js.dreamQuery.index,
+		external,
+		plugins
+	});
+
+	await bundle.write({
+		file: path.resolve(__dirname, `./${paths.dist.js}${path.sep}${fileDest}`),
+		banner,
+		globals,
+		format: 'umd',
+		name: 'dreamQuery',
+		sourcemap: true,
+	});
+	// Reload Browsersync clients
+	reload();
+	done();
+});
+
 gulp.task('customjs', async (done) => {
 	let fileDest = 'custom.js';
 	const banner = `/*!
@@ -281,6 +316,14 @@ gulp.task('tagsinputjs', async (done) => {
 	gulp.src(paths.js.tagsinput.all)
 		.pipe(concat('tagsinput-typeahead.js'))
 		.pipe(gulp.dest(paths.dist.tagsinput));
+	reload();
+	done();
+});
+
+gulp.task('vuejs', async (done) => {
+	gulp.src(require.resolve('vue/dist/vue.esm.js'))
+		.pipe(rename('vue.js'))
+		.pipe(gulp.dest(paths.dist.vue));
 	reload();
 	done();
 });
@@ -429,6 +472,6 @@ gulp.task('watch', function (done) {
 
 //Not building HTML by default as we're using our own templating.
 
-gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs') /*, gulp.series('serve', 'watch')*/));
+gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs') /*, gulp.series('serve', 'watch')*/));
 
-gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs')));
+gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs')));
