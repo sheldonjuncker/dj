@@ -28,7 +28,12 @@ class PathInfo
 
 	public function getTemplatePath(): string
 	{
-		return $this->info['parameters']['templatePath'] ?? '';
+		return $this->info['parameters']['templatePath'];
+	}
+
+	public function getJavaScriptPath(): string
+	{
+		return $this->info['parameters']['jsPath'];
 	}
 
 

@@ -1,2 +1,3 @@
 parameters:
     templatePath: C:/xampp/htdocs/app/Presenters/templates
+    jsPath: C:/xampp/htdocs/www/dist/assets/js
