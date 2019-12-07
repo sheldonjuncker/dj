@@ -12,6 +12,8 @@ use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
+use App\Gui\JS\ExternalScript;
+use App\Gui\JS\Script;
 use App\Storm\Model\DreamModel;
 use App\Storm\Model\DreamToDreamCategoryModel;
 use App\Storm\Model\DreamToDreamTypeModel;
@@ -35,6 +37,14 @@ final class DreamPresenter extends BasePresenter
 		$this->database = $database;
 
 		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
+
+		//Register scripts needed for dreams
+		$this->getScriptRegistrar()->registerScript(
+			new Script('tagsinput/tagsinput-typeahead.js')
+		);
+		$this->getScriptRegistrar()->registerScript(
+			new ExternalScript('https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js')
+		);
 	}
 
 	public function renderDefault()

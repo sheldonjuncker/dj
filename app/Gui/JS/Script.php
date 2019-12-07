@@ -30,7 +30,7 @@ class Script
 	 */
 	public function __construct(string $src, int $position = self::POS_END)
 	{
-		$this->src = PathInfo::getInstance()->getJavaScriptPath() . '/' . $src;
+		$this->src = '/dist/assets/js/' . $src;
 		$this->position = $position;
 	}
 

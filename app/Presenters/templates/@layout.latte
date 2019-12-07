@@ -13,6 +13,10 @@
 	<link href="/dist/assets/css/theme.css" rel="stylesheet" type="text/css" media="all" />
 	<link href="/dist/assets/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" media="all" />
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+
+	{foreach $headerScripts as $script}
+		{$script->render()|noescape}
+	{/foreach}
 </head>
 <body>
 <!-- End of Header-->
@@ -42,34 +46,9 @@
 
 <!-- Start of Footer -->
 	{block scripts}
-		<!-- Required vendor scripts (Do not remove) -->
-		<script type="text/javascript" src="/dist/assets/js/jquery.min.js"></script>
-		<script type="text/javascript" src="/dist/assets/js/popper.min.js"></script>
-		<script type="text/javascript" src="/dist/assets/js/bootstrap.js"></script>
-		<script type="text/javascript" src="/dist/assets/js/tagsinput/tagsinput-typeahead.js"></script>
-
-		<!-- Optional Vendor Scripts (Remove the plugin script here and comment initializer script out of index.js if site does not use that feature) -->
-
-		<!-- Autosize - resizes textarea inputs as user types -->
-		<script type="text/javascript" src="/dist/assets/js/autosize.min.js"></script>
-		<!-- Flatpickr (calendar/date/time picker UI) -->
-		<script type="text/javascript" src="/dist/assets/js/flatpickr.min.js"></script>
-		<!-- Prism - displays formatted code boxes -->
-		<script type="text/javascript" src="/dist/assets/js/prism.js"></script>
-		<!-- Shopify Draggable - drag, drop and sort items on page -->
-		<script type="text/javascript" src="/dist/assets/js/draggable.bundle.legacy.js"></script>
-		<script type="text/javascript" src="/dist/assets/js/swap-animation.js"></script>
-		<!-- Dropzone - drag and drop files onto the page for uploading -->
-		<script type="text/javascript" src="/dist/assets/js/dropzone.min.js"></script>
-		<!-- List.js - filter list elements -->
-		<script type="text/javascript" src="/dist/assets/js/list.min.js"></script>
-
-		<!-- Required theme scripts (Do not remove) -->
-		<script type="text/javascript" src="/dist/assets/js/theme.js"></script>
-
-		<!-- Summernote JS -->
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
-
+		{foreach $bodyScripts as $script}
+			{$script->render()|noescape}
+		{/foreach}
 		<!-- Custom JS -->
 		<script type="text/javascript" src="/dist/assets/js/custom.js"></script>
 	{/block}
