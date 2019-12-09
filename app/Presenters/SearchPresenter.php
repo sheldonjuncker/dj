@@ -6,6 +6,7 @@ namespace App\Presenters;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
+use App\Gui\JS\Script;
 use App\Storm\Form\DreamSearchModel;
 use App\Storm\Query\DreamQuery;
 use Nette\Database\Context;
@@ -19,6 +20,9 @@ class SearchPresenter extends BasePresenter
 	public function __construct(Context $database)
 	{
 		parent::__construct();
+		$this->getScriptRegistrar()->registerScript(new Script('vue/vue.js'));
+		$this->getScriptRegistrar()->registerScript(new Script('dream-query.js'));
+
 		$this->database = $database;
 
 		$this->addBreadcrumb(new Breadcrumb('Dream Journal', '/'));
@@ -51,5 +55,10 @@ class SearchPresenter extends BasePresenter
 		);
 		$sorcerer->addSubmit(['value' => 'Search']);
 		return $sorcerer;
+	}
+
+	public function renderQueryBuilder()
+	{
+
 	}
 }

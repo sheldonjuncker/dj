@@ -43,7 +43,7 @@ final class DreamPresenter extends BasePresenter
 			new Script('tagsinput/tagsinput-typeahead.js')
 		);
 		$this->getScriptRegistrar()->registerScript(
-			new ExternalScript('https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js')
+			new Script('summernote.js')
 		);
 	}
 
@@ -165,7 +165,8 @@ final class DreamPresenter extends BasePresenter
 		$sorcerer->addElement(
 			new WithLabel('Description', new TextArea($model, 'description', [
 				'rows' => 6,
-				'id' => 'Dream_description'
+				'id' => 'Dream_description',
+				'class' => 'dj-summernote'
 			]))
 		);
 

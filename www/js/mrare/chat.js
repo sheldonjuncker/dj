@@ -7,7 +7,7 @@
 
 
 import jQuery from 'jquery';
-import autosize from 'autosize';
+import autosize from '../../node_modules/autosize/dist/autosize.min';
 import mrUtil from './util';
 
 autosize(document.querySelectorAll('.chat-module-bottom textarea'));

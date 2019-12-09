@@ -1,12 +1,5 @@
-class SummerNote {
-	init(id, options) {
-		$('#' + id).summernote(options || {});
-	}
-}
-
 $(document).ready(function(){
-	let summerNote = new SummerNote();
-	summerNote.init('Dream_description', {
+	let options = {
 		minHeight: '400px',
 		toolbar: [
 			['style', ['bold', 'italic', 'underline', 'clear']],
@@ -18,11 +11,11 @@ $(document).ready(function(){
 			['insert',[]],
 			['view', ['fullscreen']],
 		],
-		fontSizes: [8,9,10,11,12,14,16,18,20,24,28,32,36],
+		fontSizes: ['8','10','12','14','16','18','20','24','28','32','36'],
 		disableDragAndDrop: true,
 		codeviewFilter: true,
 		codeviewIframeFilter: true
-	});
-});
+	};
 
-export default SummerNote;
+	$(".dj-summernote").summernote(options);
+});

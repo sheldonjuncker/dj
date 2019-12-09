@@ -97,6 +97,10 @@ getPaths = () => {
 		all: "js/custom/*.js",
 		index: "js/custom/index.js"
 	  },
+	  summerNote: {
+      	all: "js/summer-note/*.js",
+		index: "js/summer-note/index.js"
+	  },
 	  dreamQuery: {
       	all: "js/dreamQuery/*.js",
 		index: "js/dreamQuery/index.js"
@@ -280,6 +284,36 @@ gulp.task('dreamqueryjs', async (done) => {
 	done();
 });
 
+gulp.task('summernotejs', async (done) => {
+	let fileDest = 'summernote.js';
+	const banner = `/*!
+  * SummerNote JS + Initialization
+  */`;
+
+	//I don't think we need anything here.
+	const external = [];
+	const plugins = [];
+	const globals = {};
+
+	const bundle = await rollup.rollup({
+		input: paths.js.summerNote.index,
+		external,
+		plugins
+	});
+
+	await bundle.write({
+		file: path.resolve(__dirname, `./${paths.dist.js}${path.sep}${fileDest}`),
+		banner,
+		globals,
+		format: 'umd',
+		name: 'summerNote',
+		sourcemap: true,
+	});
+	// Reload Browsersync clients
+	reload();
+	done();
+});
+
 gulp.task('customjs', async (done) => {
 	let fileDest = 'custom.js';
 	const banner = `/*!
@@ -321,7 +355,7 @@ gulp.task('tagsinputjs', async (done) => {
 });
 
 gulp.task('vuejs', async (done) => {
-	gulp.src(require.resolve('vue/dist/vue.esm.js'))
+	gulp.src(require.resolve('vue/dist/vue.js'))
 		.pipe(rename('vue.js'))
 		.pipe(gulp.dest(paths.dist.vue));
 	reload();
@@ -472,6 +506,6 @@ gulp.task('watch', function (done) {
 
 //Not building HTML by default as we're using our own templating.
 
-gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs') /*, gulp.series('serve', 'watch')*/));
+gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs', 'summernotejs') /*, gulp.series('serve', 'watch')*/));
 
-gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs')));
+gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('sass', 'sass-min', 'bootstrapjs', 'mrarejs', 'customjs', 'tagsinputjs', 'dreamqueryjs', 'vuejs', 'summernotejs')));
