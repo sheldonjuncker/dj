@@ -12,17 +12,10 @@ use App\Gui\Form\Element\TextArea;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
-use App\Gui\JS\ExternalScript;
 use App\Gui\JS\Script;
 use App\Storm\Model\DreamModel;
-use App\Storm\Model\DreamToDreamCategoryModel;
-use App\Storm\Model\DreamToDreamTypeModel;
 use App\Storm\Model\DreamTypeModel;
-use App\Storm\Query\DreamCategoryQuery;
 use App\Storm\Query\DreamQuery;
-use App\Storm\Query\DreamToDreamCategoryQuery;
-use App\Storm\Query\DreamToDreamTypeQuery;
-use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette;
 
