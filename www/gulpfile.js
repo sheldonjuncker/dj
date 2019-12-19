@@ -362,6 +362,14 @@ gulp.task('vuejs', async (done) => {
 	done();
 });
 
+gulp.task('chartjs', async (done) => {
+	gulp.src(require.resolve('chart.js/dist/Chart.js'))
+		.pipe(rename('chart.js'))
+		.pipe(gulp.dest(paths.dist.js));
+	reload();
+	done();
+});
+
 gulp.task('mrarejs', async (done) => {
   gulp.src(paths.js.mrare.all)
     .pipe(eslint())
