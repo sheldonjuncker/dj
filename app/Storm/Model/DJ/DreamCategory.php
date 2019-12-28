@@ -1,33 +1,32 @@
 <?php
 
-namespace App\Storm\Model;
+namespace App\Storm\Model\DJ;
 
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\DataDefinition\DataFieldDefinition;
-use App\Storm\DataFormatter\BooleanDataFormatter;
 use App\Storm\DataFormatter\IntegerDataFormatter;
+use App\Storm\Model\BaseModel;
 
-class DreamTypeModel extends BaseModel implements Model
+class DreamCategory extends BaseModel
 {
 	/** @var  int $id */
 	protected $id;
 
-	/** @var  string $id */
-	protected $name;
-
-	/** @var  bool  $default */
-	protected $default;
+	/** @var string $name */
+	protected $name = '';
 
 	public function getDataDefinition(): DataDefinition
 	{
 		return new DataDefinition($this, [
 			new DataFieldDefinition('id', new IntegerDataFormatter()),
-			new DataFieldDefinition('name'),
-			new DataFieldDefinition('default', new BooleanDataFormatter())
+			new DataFieldDefinition('name')
 		]);
 	}
 
-	public function getId(): int
+	/**
+	 * @return int|null
+	 */
+	public function getId(): ?int
 	{
 		return $this->id;
 	}
@@ -40,28 +39,19 @@ class DreamTypeModel extends BaseModel implements Model
 		$this->id = $id;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName(): string
 	{
 		return $this->name;
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function setName(string $name)
 	{
 		$this->name = $name;
-	}
-
-	public function isDefault(): bool
-	{
-		return $this->default;
-	}
-
-	public function setDefault(bool $default)
-	{
-		$this->default = $default;
-	}
-
-	public function getFontIcon(): string
-	{
-		return 'repeat';
 	}
 }

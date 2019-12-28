@@ -6,7 +6,7 @@ namespace App\Storm\Query;
 
 use App\Storm\DataFormatter\UuidDataFormatter;
 use App\Storm\Model\Model;
-use App\Storm\Model\DreamModel;
+use App\Storm\Model\DJ\Dream;
 use Nette\Database\Context;
 use Nette\Database\Table\Selection;
 
@@ -51,7 +51,7 @@ class DreamQuery extends SqlQuery
 
 	public function getModel(): Model
 	{
-		return new DreamModel();
+		return new Dream();
 	}
 
 	protected function buildQuery(): Selection
@@ -163,7 +163,7 @@ class DreamQuery extends SqlQuery
 	# Only added for type hinting
 
 	/**
-	 * @return DreamModel[]
+	 * @return Dream[]
 	 */
 	public function find(): \Iterator
 	{
@@ -171,7 +171,7 @@ class DreamQuery extends SqlQuery
 	}
 
 	/**
-	 * @return DreamModel|null
+	 * @return Dream|null
 	 */
 	public function findOne(): ?Model
 	{
@@ -179,7 +179,7 @@ class DreamQuery extends SqlQuery
 	}
 
 	/**
-	 * @return DreamModel[]
+	 * @return Dream[]
 	 */
 	public function findAll(): array
 	{

@@ -3,9 +3,9 @@
 namespace App\DreamJournal;
 
 use App\Storm\DataDefinition\DataFieldDefinition;
-use App\Storm\Model\DreamCategoryModel;
-use App\Storm\Model\DreamModel;
-use App\Storm\Model\DreamTypeModel;
+use App\Storm\Model\DJ\DreamCategory;
+use App\Storm\Model\DJ\Dream as DreamModel;
+use App\Storm\Model\DJ\DreamType;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette\Database\Context;
@@ -24,7 +24,7 @@ class Dream
 	/** @var DreamCategoryRelation The dream's categories. */
 	protected $dreamCategories;
 
-	public function __construct(DreamModel $dreamModel, Context $database)
+	public function __construct(Dream $dreamModel, Context $database)
 	{
 		$this->dreamModel = $dreamModel;
 		$this->database = $database;
@@ -36,10 +36,10 @@ class Dream
 	/**
 	 * Checks to see if the dream is of a specific type.
 	 *
-	 * @param DreamTypeModel $type
+	 * @param DreamType $type
 	 * @return bool
 	 */
-	public function hasType(DreamTypeModel $type): bool
+	public function hasType(DreamType $type): bool
 	{
 		foreach($this->getTypes() as $myType)
 		{
@@ -54,7 +54,7 @@ class Dream
 	/**
 	 * Gets the dream's types.
 	 *
-	 * @return DreamTypeModel[]
+	 * @return DreamType[]
 	 */
 	public function getTypes(): array
 	{
@@ -64,7 +64,7 @@ class Dream
 	/**
 	 * Gets all available types for dreams.
 	 *
-	 * @return DreamTypeModel[]
+	 * @return DreamType[]
 	 */
 	public function getAvailableTypes(): array
 	{
@@ -75,7 +75,7 @@ class Dream
 	/**
 	 * Gets the dreams categories.
 	 *
-	 * @return DreamCategoryModel[]
+	 * @return DreamCategory[]
 	 */
 	public function getCategories(): array
 	{
@@ -110,7 +110,7 @@ class Dream
 		{
 			foreach($dreamTypePost as $dreamType => $checked)
 			{
-				$dreamTypeModel = new DreamTypeModel();
+				$dreamTypeModel = new DreamType();
 				$dreamTypeModel->setId($dreamType);
 				$this->dreamTypes->add($dreamTypeModel);
 			}
@@ -131,7 +131,7 @@ class Dream
 			{
 				continue;
 			}
-			$dreamCategory = new DreamCategoryModel();
+			$dreamCategory = new DreamCategory();
 			$dreamCategory->setId($category);
 			$this->dreamCategories->add($dreamCategory);
 		}

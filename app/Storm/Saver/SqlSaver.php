@@ -48,6 +48,10 @@ class SqlSaver extends Saver
 	public function getTableName(Model $model): string
 	{
 		$rc = new \ReflectionClass($model);
+		$namespace = $rc->getNamespaceName();
+		$namespaces = explode('\\', $namespace);
+		$schemaName = strtolower(end($namespaces));
+
 		$shortClassName = $rc->getShortName();
 		$baseName = str_replace('Model', '', $shortClassName);
 
@@ -65,7 +69,7 @@ class SqlSaver extends Saver
 			$tableName .= strtolower($c);
 		}
 
-		return $tableName;
+		return $schemaName . '.' . $tableName;
 	}
 
 	public function save(Model $model)

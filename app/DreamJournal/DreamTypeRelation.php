@@ -2,9 +2,9 @@
 
 namespace App\DreamJournal;
 
-use App\Storm\Model\DreamModel;
-use App\Storm\Model\DreamToDreamTypeModel;
-use App\Storm\Model\DreamTypeModel;
+use App\Storm\Model\DJ\Dream;
+use App\Storm\Model\DJ\DreamToDreamType;
+use App\Storm\Model\DJ\DreamType;
 use App\Storm\Query\DreamToDreamTypeQuery;
 use App\Storm\Query\DreamTypeQuery;
 use App\Storm\Saver\SqlSaver;
@@ -15,20 +15,20 @@ class DreamTypeRelation extends RelatedData
 	protected $dream;
 	protected $database;
 
-	public function __construct(DreamModel $dream, Context $database)
+	public function __construct(Dream $dream, Context $database)
 	{
 		parent::__construct();
 		$this->dream = $dream;
 		$this->database = $database;
 	}
 
-	protected function getMappingModel(DreamTypeModel $type, bool $create = false): ?DreamToDreamTypeModel
+	protected function getMappingModel(DreamType $type, bool $create = false): ?DreamToDreamType
 	{
 		$query = new DreamToDreamTypeQuery($this->database);
 		$mappingModel = $query->dream($this->dream->getId())->type($type->getId())->findOne();
 		if(!$mappingModel && $create)
 		{
-			$mappingModel = new DreamToDreamTypeModel();
+			$mappingModel = new DreamToDreamType();
 			$mappingModel->setTypeId($type->getId());
 			$mappingModel->setDreamId($this->dream->getId());
 		}

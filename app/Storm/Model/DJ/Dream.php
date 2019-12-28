@@ -1,15 +1,16 @@
 <?php
 
 
-namespace App\Storm\Model;
+namespace App\Storm\Model\DJ;
 
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\DateFormatter;
 use App\Storm\DataFormatter\UuidDataFormatter;
+use App\Storm\Model\BaseModel;
 use Nette;
 
-class DreamModel extends BaseModel implements Model
+class Dream extends BaseModel
 {
 	public function getDataDefinition(): DataDefinition
 	{

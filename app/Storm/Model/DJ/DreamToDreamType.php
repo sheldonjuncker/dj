@@ -1,15 +1,16 @@
 <?php
 
 
-namespace App\Storm\Model;
+namespace App\Storm\Model\DJ;
 
 
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\DataDefinition\DataFieldDefinition;
 use App\Storm\DataFormatter\IntegerDataFormatter;
 use App\Storm\DataFormatter\UuidDataFormatter;
+use App\Storm\Model\BaseModel;
 
-class DreamToDreamTypeModel extends BaseModel
+class DreamToDreamType extends BaseModel
 {
 	protected $dream_id;
 	protected $type_id;

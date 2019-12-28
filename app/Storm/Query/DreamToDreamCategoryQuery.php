@@ -3,7 +3,7 @@
 namespace App\Storm\Query;
 
 use App\Storm\DataFormatter\UuidDataFormatter;
-use App\Storm\Model\DreamToDreamCategoryModel;
+use App\Storm\Model\DJ\DreamToDreamCategory;
 use App\Storm\Model\Model;
 use Nette\Database\Table\Selection;
 
@@ -27,7 +27,7 @@ class DreamToDreamCategoryQuery extends SqlQuery
 
 	public function getModel(): Model
 	{
-		return new DreamToDreamCategoryModel();
+		return new DreamToDreamCategory();
 	}
 
 	protected function buildQuery(): Selection
@@ -48,7 +48,7 @@ class DreamToDreamCategoryQuery extends SqlQuery
 	}
 
 	/**
-	 * @return DreamToDreamCategoryModel[]
+	 * @return DreamToDreamCategory[]
 	 */
 	public function find(): \Iterator
 	{
@@ -56,7 +56,7 @@ class DreamToDreamCategoryQuery extends SqlQuery
 	}
 
 	/**
-	 * @return DreamToDreamCategoryModel|null
+	 * @return DreamToDreamCategory|null
 	 */
 	public function findOne(): ?Model
 	{
@@ -64,7 +64,7 @@ class DreamToDreamCategoryQuery extends SqlQuery
 	}
 
 	/**
-	 * @return DreamToDreamCategoryModel[]
+	 * @return DreamToDreamCategory[]
 	 */
 	public function findAll(): array
 	{

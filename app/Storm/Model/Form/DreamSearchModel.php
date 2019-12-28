@@ -7,7 +7,7 @@ namespace App\Storm\Form;
 use App\Gui\Form\Element\Exception;
 use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\DataDefinition\DataFieldDefinition;
-use App\Storm\Model\DreamModel;
+use App\Storm\Model\DJ\Dream;
 use App\Storm\Query\DreamQuery;
 use Nette\Database\Context;
 
@@ -26,7 +26,7 @@ class DreamSearchModel extends FormModel
 	 * Hacky test thing which performs a search using Python!
 	 *
 	 * @param Context $database
-	 * @return DreamModel[]
+	 * @return Dream[]
 	 */
 	public function search(Context $database): array
 	{

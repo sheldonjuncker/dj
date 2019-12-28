@@ -13,8 +13,8 @@ use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
 use App\Gui\JS\Script;
-use App\Storm\Model\DreamModel;
-use App\Storm\Model\DreamTypeModel;
+use App\Storm\Model\DJ\Dream as DreamModel;
+use App\Storm\Model\DJ\DreamType;
 use App\Storm\Query\DreamQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette;
@@ -86,7 +86,7 @@ final class DreamPresenter extends BasePresenter
 		$sorcerer = new Sorcerer($dream, '', '');
 		$dreamTypesElement = new LatteTemplate('components/dream_types_edit.latte', [
 			'dreamTypes' => $dreamWeaver->getAvailableTypes(),
-			'checked' => function (DreamTypeModel $type) use($dreamWeaver){
+			'checked' => function (DreamType $type) use($dreamWeaver){
 				return $dreamWeaver->hasType($type) ? 'checked="checked"' : '';
 			},
 			'disabled' => 'disabled="disabled"'
@@ -165,7 +165,7 @@ final class DreamPresenter extends BasePresenter
 
 		$sorcerer->addElement(new WithLabel('Dream Type', new LatteTemplate('components/dream_types_edit.latte', [
 			'dreamTypes' => $dreamWeaver->getAvailableTypes(),
-			'checked' => function (DreamTypeModel $type) use($dreamWeaver){
+			'checked' => function (DreamType $type) use($dreamWeaver){
 				return $dreamWeaver->hasType($type) ? 'checked="checked"' : '';
 			},
 			'disabled' => ''

@@ -7,7 +7,7 @@ use App\Gui\Form\Element\HiddenInput;
 use App\Gui\Form\Element\TextInput;
 use App\Gui\Form\Element\WithLabel;
 use App\Gui\Form\Sorcerer;
-use App\Storm\Model\DreamCategoryModel;
+use App\Storm\Model\DJ\DreamCategory;
 use App\Storm\Query\DreamCategoryQuery;
 use App\Storm\Saver\SqlSaver;
 use Nette\Application\BadRequestException;
@@ -84,7 +84,7 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 	{
 		$this->addBreadcrumb(new Breadcrumb('Dream Categories', '/dreamcategory'));
 		$this->addBreadcrumb(new Breadcrumb('New'));
-		$this->template->add('sorcerer', $this->getSorcerer(new DreamCategoryModel(), Sorcerer::CREATE));
+		$this->template->add('sorcerer', $this->getSorcerer(new DreamCategory(), Sorcerer::CREATE));
 	}
 
 	public function renderSave(int $id = NULL)
@@ -105,7 +105,7 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 		$this->redirect('default');
 	}
 
-	protected function getSorcerer(DreamCategoryModel $category, string $mode): Sorcerer
+	protected function getSorcerer(DreamCategory $category, string $mode): Sorcerer
 	{
 		$readOnly = $mode == Sorcerer::VIEW;
 
@@ -138,9 +138,9 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 	 *
 	 * @param string $id
 	 * @param bool $createNew Whether or not to return an empty object when it can't be found.
-	 * @return DreamCategoryModel
+	 * @return DreamCategory
 	 */
-	public function getCategory(?int $id, bool $createNew = false): DreamCategoryModel
+	public function getCategory(?int $id, bool $createNew = false): DreamCategory
 	{
 		$dreamCategoryQuery = new DreamCategoryQuery($this->database);
 		if($id && ($dream = $dreamCategoryQuery->id($id)->findOne()))
@@ -149,7 +149,7 @@ class DreamcategoryPresenter extends \App\Presenters\BasePresenter
 		}
 		else if($createNew)
 		{
-			return new DreamCategoryModel();
+			return new DreamCategory();
 		}
 		else
 		{

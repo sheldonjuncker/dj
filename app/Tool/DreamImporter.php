@@ -2,7 +2,7 @@
 
 namespace App\Tool;
 
-use App\Storm\Model\DreamModel;
+use App\Storm\Model\DJ\Dream;
 use App\Storm\Saver\SqlSaver;
 use Nette\Database\Context;
 use Nette\FileNotFoundException;
@@ -38,7 +38,7 @@ class DreamImporter
 				foreach($jsonData as $dreamData)
 				{
 					//TODO: Test this as it changed
-					$dreamModel = new DreamModel();
+					$dreamModel = new Dream();
 					$dreamModel->fromArray((array) $dreamData);
 					$dreamModels[] = $dreamModel;
 				}
@@ -47,7 +47,7 @@ class DreamImporter
 			$dreamSaver = new SqlSaver($this->database);
 			foreach($dreamModels as $dreamModel)
 			{
-				if($dreamModel instanceof DreamModel)
+				if($dreamModel instanceof Dream)
 				{
 					$dreamModel->setId(NULL);
 					$dreamSaver->save($dreamModel);
@@ -98,7 +98,7 @@ class DreamImporter
 					$dreamSaver->save($dream);
 				}
 
-				$dream = new DreamModel();
+				$dream = new Dream();
 				$dream->setUserId(1);
 				$dream->setDreamtAt($dreamEventDate);
 				$dream->setTitle($matches[1]);

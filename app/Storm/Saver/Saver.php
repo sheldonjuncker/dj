@@ -2,9 +2,7 @@
 
 namespace App\Storm\Saver;
 
-use App\Storm\DataDefinition\DataDefinition;
 use App\Storm\Model\Model;
-use Nette\Database\Context;
 
 /**
  * Class Saver
