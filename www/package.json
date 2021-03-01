@@ -30,7 +30,7 @@
     "jquery": "~3.4.1",
     "list.js": "~1.5.0",
     "popper.js": "~1.15.0",
-    "prismjs": "~1.16.0",
+    "prismjs": "~1.23.0",
     "rollup-plugin-alias": "^2.2.0",
     "vue": "^2.6.10"
   },
